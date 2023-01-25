@@ -1,0 +1,63 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <world name="panda_pick_and_place">
+    <!--A global light source-->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <!--A ground plane-->
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    <!--A platform-->
+    <include>
+      <uri>model://platform</uri>
+      <pose>0.4 0 0.209911 0 0 0</pose>
+    </include>
+    <!--A cube-->
+    <include>
+      <uri>model://tangram_1</uri>
+      <pose>0.18 0.3 0.41 0 0 0</pose>
+    </include>
+    <include> 
+      <uri>model://tangram_2</uri>
+      <pose>0.32 0.3 0.41 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://tangram_3</uri>
+      <pose>0.2 0.3 0.41 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://tangram_4</uri>
+      <pose>0.18 0.1 0.41 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://tangram_5</uri>
+      <pose>0.32 0.1 0.41 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://tangram_6</uri>
+      <pose>0.18 -0.03 0.42 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://tangram_7</uri>
+      <pose>0.3 0.4 0.41 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://flat_back</uri>
+      <pose>-0.5 0 0.481 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://flat_right</uri>
+      <pose>0 -0.8 0.481 0 0 1.571</pose>
+    </include>
+    <!--Camera settings-->
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose>1.59801 -1.66211 1.29545 -0 0.419643 2.23219</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+  </world>
+</sdf>
