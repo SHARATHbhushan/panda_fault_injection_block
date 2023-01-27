@@ -204,6 +204,6 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-catkin_install_python(PROGRAMS src/robot_fi_module.py src/goal_listener.py src/check_collision.py src/fib_gui.py
+catkin_install_python(PROGRAMS src/robot_fi_module.py src/goal_listener.py src/check_collision.py src/fib_gui.py src/random_error_gen.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
