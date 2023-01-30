@@ -80,7 +80,7 @@ class Ui_Test_window(object):
         print("clicked")
         msg = faultmsg() 
         msg.fault = self.fault_val
-        msg.joint = self.joint_val
+        msg.joint = int(self.joint_val)-1
         msg.pose = self.state_val
         self.fault_publisher.publish(msg)
 

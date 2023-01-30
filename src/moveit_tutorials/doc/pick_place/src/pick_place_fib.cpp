@@ -414,6 +414,7 @@ int main(int argc, char** argv)
 
   ros::Publisher goal_pub = nh.advertise<std_msgs::Bool>("goal_state", 1000);  
   ros::Publisher pose_state_pub = nh.advertise<std_msgs::Int32>("pose_state", 1000);  
+  ros::Publisher iterations = nh.advertise<std_msgs::Int32>("iterations", 1000);
   spinner.start();
   ros::WallDuration(1.0).sleep();
 
@@ -436,7 +437,6 @@ int main(int argc, char** argv)
   bool status;
   for (int i = 0; i < 7;i = i + 1)
   { 
-
 
     // // Add Objects to the envoirement
     // addCollisionObjects(planning_scene_interface);
@@ -470,7 +470,9 @@ int main(int argc, char** argv)
     // // Wait a bit for ROS things to initialize
     ros::WallDuration(1.0).sleep();
     //ros::Time::init();
-
+    std_msgs::Int32 iter;
+    iter.data = i;
+    iterations.publish(iter);
     std_msgs::Bool status;
     std_msgs::Int32 state;
     ROS_WARN("round %d start at:%.8f",i,ros::Time::now().toSec());

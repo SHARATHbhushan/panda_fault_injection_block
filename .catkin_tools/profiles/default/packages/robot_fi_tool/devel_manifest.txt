@@ -23,4 +23,5 @@ robot_fi_tool
 /home/acefly/robot_fib/devel/.private/robot_fi_tool/lib/robot_fi_tool/random_error_gen.py /home/acefly/robot_fib/devel/lib/robot_fi_tool/random_error_gen.py
 /home/acefly/robot_fib/devel/.private/robot_fi_tool/lib/robot_fi_tool/robot_fi_module.py /home/acefly/robot_fib/devel/lib/robot_fi_tool/robot_fi_module.py
 /home/acefly/robot_fib/devel/.private/robot_fi_tool/lib/robot_fi_tool/fib_gui.py /home/acefly/robot_fib/devel/lib/robot_fi_tool/fib_gui.py
+/home/acefly/robot_fib/devel/.private/robot_fi_tool/lib/robot_fi_tool/fib_gui_v2.py /home/acefly/robot_fib/devel/lib/robot_fi_tool/fib_gui_v2.py
 /home/acefly/robot_fib/devel/.private/robot_fi_tool/lib/robot_fi_tool/cmake.lock /home/acefly/robot_fib/devel/lib/robot_fi_tool/cmake.lock

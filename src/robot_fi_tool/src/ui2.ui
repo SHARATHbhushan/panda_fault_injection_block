@@ -184,26 +184,6 @@
      <string>Time to inject fault</string>
     </property>
    </widget>
-   <widget class="QwtPlot" name="qwtPlot">
-    <property name="geometry">
-     <rect>
-      <x>370</x>
-      <y>70</y>
-      <width>371</width>
-      <height>211</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QwtPlot" name="qwtPlot_2">
-    <property name="geometry">
-     <rect>
-      <x>380</x>
-      <y>370</y>
-      <width>371</width>
-      <height>231</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QGraphicsView" name="graphicsView">
     <property name="geometry">
      <rect>
@@ -253,16 +233,29 @@
      <string>Fault Injected Sensor Data</string>
     </property>
    </widget>
+   <widget class="QWidget" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>70</y>
+      <width>401</width>
+      <height>251</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QWidget" name="widget_2" native="true">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>360</y>
+      <width>401</width>
+      <height>271</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QwtPlot</class>
-   <extends>QFrame</extends>
-   <header>qwt_plot.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

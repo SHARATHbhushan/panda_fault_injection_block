@@ -56,15 +56,21 @@ class firos:
         self.desired_joint = 0
         self.desired_fault = 0
         self.fault_val = 0
+        self.joint_val_list = []
+        self.fault_val_list = []
 
     def fault_callback(self,fault_msg):
         self.desired_state = fault_msg.pose
         self.desired_joint = fault_msg.joint
         self.desired_fault = fault_msg.fault
+        self.fault_val_list = []
+
 
 
     def state_callback(self,state):
         self.state = state.data
+        self.fault_val_list = []
+        
 
     def goal_callback(self,goal):   
         self.goal = goal.data
@@ -74,12 +80,13 @@ class firos:
         self.list_joint_data = list(self.joint_data.position)  
         #print(data.position[1])
         # works only for noise right now
+        self.joint = self.desired_joint
         if self.desired_fault == 0:
             self.fault_val = 0
         if self.desired_fault == 1:
             self.fault_val = np.random.normal(1,1,1)[0]
         if self.desired_fault == 2:
-            self.fault_val = 0 #to be defined
+            self.fault_val_list.append(self.list_joint_data[self.joint]) #to be defined
         if self.desired_fault == 3:
             self.fault_val = -self.list_joint_data[self.joint]
         if self.desired_fault == 4:
@@ -87,8 +94,10 @@ class firos:
         if self.goal == True:
             if self.state == self.desired_state:
                 #print(self.list_joint_data)
-                self.joint = self.desired_joint
-                self.list_joint_data[self.joint] = self.list_joint_data[self.joint] + self.fault_val
+                if self.desired_fault == 2:
+                    self.list_joint_data[self.joint] = self.fault_val_list[0]
+                else:
+                    self.list_joint_data[self.joint] = self.list_joint_data[self.joint] + self.fault_val
                 print(self.list_joint_data[self.joint])
                 #print("noise error injected")
                 self.joint_data.position = tuple(self.list_joint_data)
