@@ -45,4 +45,5 @@
       </visual>
     </link>
   </model>
+  <static>false</static>
 </sdf>

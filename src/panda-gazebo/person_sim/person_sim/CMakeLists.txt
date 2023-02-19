@@ -7,6 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   gazebo_ros
   spawn_robot_tools_pkg
+  turtle_tf_3d
 )
 
 catkin_package(

@@ -1,7 +1,0 @@
-grasp_plugin/gazebo-pkgs/gazebo_grasp_plugin
-/home/acefly/robot_fib/devel/.private/gazebo_grasp_plugin/cmake.lock /home/acefly/robot_fib/devel/./cmake.lock
-/home/acefly/robot_fib/devel/.private/gazebo_grasp_plugin/share/gazebo_grasp_plugin/cmake/gazebo_grasp_pluginConfig.cmake /home/acefly/robot_fib/devel/share/gazebo_grasp_plugin/cmake/gazebo_grasp_pluginConfig.cmake
-/home/acefly/robot_fib/devel/.private/gazebo_grasp_plugin/share/gazebo_grasp_plugin/cmake/gazebo_grasp_pluginConfig-version.cmake /home/acefly/robot_fib/devel/share/gazebo_grasp_plugin/cmake/gazebo_grasp_pluginConfig-version.cmake
-/home/acefly/robot_fib/devel/.private/gazebo_grasp_plugin/lib/libgazebo_grasp_fix.so /home/acefly/robot_fib/devel/lib/libgazebo_grasp_fix.so
-/home/acefly/robot_fib/devel/.private/gazebo_grasp_plugin/lib/libgazebo_grasp_msgs.so /home/acefly/robot_fib/devel/lib/libgazebo_grasp_msgs.so
-/home/acefly/robot_fib/devel/.private/gazebo_grasp_plugin/lib/pkgconfig/gazebo_grasp_plugin.pc /home/acefly/robot_fib/devel/lib/pkgconfig/gazebo_grasp_plugin.pc

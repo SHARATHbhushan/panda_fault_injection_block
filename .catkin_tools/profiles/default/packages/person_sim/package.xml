@@ -15,6 +15,8 @@
   <run_depend>gazebo_ros</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>spawn_robot_tools_pkg</run_depend>
+  <run_depend>turtle_tf_3d</run_depend>
+
   
   <export>
     <gazebo_ros gazebo_model_path="${prefix}/models"/>

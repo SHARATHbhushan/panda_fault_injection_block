@@ -1,5 +1,0 @@
-panda-gazebo/person_sim/person_sim
-/home/acefly/robot_fib/devel/.private/person_sim/cmake.lock /home/acefly/robot_fib/devel/./cmake.lock
-/home/acefly/robot_fib/devel/.private/person_sim/share/person_sim/cmake/person_simConfig.cmake /home/acefly/robot_fib/devel/share/person_sim/cmake/person_simConfig.cmake
-/home/acefly/robot_fib/devel/.private/person_sim/share/person_sim/cmake/person_simConfig-version.cmake /home/acefly/robot_fib/devel/share/person_sim/cmake/person_simConfig-version.cmake
-/home/acefly/robot_fib/devel/.private/person_sim/lib/pkgconfig/person_sim.pc /home/acefly/robot_fib/devel/lib/pkgconfig/person_sim.pc

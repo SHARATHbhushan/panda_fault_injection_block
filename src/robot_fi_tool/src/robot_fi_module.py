@@ -7,6 +7,7 @@ import numpy as np
 from std_msgs.msg import Bool
 from std_msgs.msg import Int32
 from robot_fi_tool.msg import faultmsg
+
 '''
 desired_state : 
   1-hover_pose
@@ -48,9 +49,11 @@ class firos:
         #print(noise)
         self.goal_state_subscriber = rospy.Subscriber("goal_msg", Bool, self.goal_callback)
         self.joint_state_publisher = rospy.Publisher("joint_states", JointState, queue_size=10)
+        self.fault_status = rospy.Publisher("fault_status", Bool, queue_size=10)
         self.joint_state_fake_subscriber = rospy.Subscriber("joint_states_fake", JointState, self.callback)
         self.state_subscriber = rospy.Subscriber("pose_state", Int32,self.state_callback)
         self.fault_msg_subscriber = rospy.Subscriber("fault_msg", faultmsg, self.fault_callback)
+        self.publish_time = rospy.Publisher("time_to_inject", Int32, queue_size=10)
         self.goal = False
         self.desired_state = 0
         self.desired_joint = 0
@@ -58,18 +61,25 @@ class firos:
         self.fault_val = 0
         self.joint_val_list = []
         self.fault_val_list = []
+        self.state = 0
+        self.fault_status.publish(False)
 
     def fault_callback(self,fault_msg):
         self.desired_state = fault_msg.pose
         self.desired_joint = fault_msg.joint
         self.desired_fault = fault_msg.fault
+        self.desired_time = fault_msg.time
+        self.desired_time_label = fault_msg.time_label
+        self.desired_offset = fault_msg.offset
         self.fault_val_list = []
-
+        #self.publish_time.publish(self.desired_time)
+        self.fault_status.publish(True)
 
 
     def state_callback(self,state):
         self.state = state.data
         self.fault_val_list = []
+        self.fault_status.publish(False)
         
 
     def goal_callback(self,goal):   
@@ -79,7 +89,6 @@ class firos:
         self.joint_data = data      
         self.list_joint_data = list(self.joint_data.position)  
         #print(data.position[1])
-        # works only for noise right now
         self.joint = self.desired_joint
         if self.desired_fault == 0:
             self.fault_val = 0
@@ -91,9 +100,11 @@ class firos:
             self.fault_val = -self.list_joint_data[self.joint]
         if self.desired_fault == 4:
             self.fault_val = 5
+
         if self.goal == True:
             if self.state == self.desired_state:
                 #print(self.list_joint_data)
+                self.fault_status.publish(True)
                 if self.desired_fault == 2:
                     self.list_joint_data[self.joint] = self.fault_val_list[0]
                 else:

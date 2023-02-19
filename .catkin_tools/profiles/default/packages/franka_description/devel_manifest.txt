@@ -1,5 +1,0 @@
-panda-gazebo/franka_ros/franka_description
-/home/acefly/robot_fib/devel/.private/franka_description/cmake.lock /home/acefly/robot_fib/devel/./cmake.lock
-/home/acefly/robot_fib/devel/.private/franka_description/share/franka_description/cmake/franka_descriptionConfig-version.cmake /home/acefly/robot_fib/devel/share/franka_description/cmake/franka_descriptionConfig-version.cmake
-/home/acefly/robot_fib/devel/.private/franka_description/share/franka_description/cmake/franka_descriptionConfig.cmake /home/acefly/robot_fib/devel/share/franka_description/cmake/franka_descriptionConfig.cmake
-/home/acefly/robot_fib/devel/.private/franka_description/lib/pkgconfig/franka_description.pc /home/acefly/robot_fib/devel/lib/pkgconfig/franka_description.pc

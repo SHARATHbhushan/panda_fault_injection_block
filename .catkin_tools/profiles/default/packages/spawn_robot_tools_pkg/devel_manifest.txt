@@ -1,6 +1,0 @@
-panda-gazebo/spawn_robot_tools/spawn_robot_tools_pkg
-/home/acefly/robot_fib/devel/.private/spawn_robot_tools_pkg/cmake.lock /home/acefly/robot_fib/devel/./cmake.lock
-/home/acefly/robot_fib/devel/.private/spawn_robot_tools_pkg/share/spawn_robot_tools_pkg/cmake/spawn_robot_tools_pkgConfig.cmake /home/acefly/robot_fib/devel/share/spawn_robot_tools_pkg/cmake/spawn_robot_tools_pkgConfig.cmake
-/home/acefly/robot_fib/devel/.private/spawn_robot_tools_pkg/share/spawn_robot_tools_pkg/cmake/spawn_robot_tools_pkgConfig-version.cmake /home/acefly/robot_fib/devel/share/spawn_robot_tools_pkg/cmake/spawn_robot_tools_pkgConfig-version.cmake
-/home/acefly/robot_fib/devel/.private/spawn_robot_tools_pkg/lib/python3/dist-packages/spawn_robot_tools_pkg/__init__.py /home/acefly/robot_fib/devel/lib/python3/dist-packages/spawn_robot_tools_pkg/__init__.py
-/home/acefly/robot_fib/devel/.private/spawn_robot_tools_pkg/lib/pkgconfig/spawn_robot_tools_pkg.pc /home/acefly/robot_fib/devel/lib/pkgconfig/spawn_robot_tools_pkg.pc

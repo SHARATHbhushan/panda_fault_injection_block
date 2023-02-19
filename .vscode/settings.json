@@ -83,5 +83,6 @@
         "bit": "cpp",
         "*.ipp": "cpp",
         "codecvt": "cpp"
-    }
+    },
+    "ros.distro": "noetic"
 }

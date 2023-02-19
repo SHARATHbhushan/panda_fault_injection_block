@@ -19,20 +19,27 @@ from PyQt5.QtGui import QPixmap
 from pyqtgraph import PlotWidget, plot
 import pyqtgraph as pg
 from random import randint
+from std_msgs.msg import Bool
 class Ui_Test_window(object):
 
     def __init__(self):
         self.fault_list = [" ","noise", "stuck_at", "package_drop", "offset"]
         self.joint_list = [" ", "panda_joint1", "panda_joint2", "panda_joint3", "panda_joint4", "panda_joint5", "panda_joint6", "panda_joint7", "panda_finger_joint1", "panda_finger_joint2"]
-        self.state_list = [" ", "hover_pose", "pick_pose_down", "pick_pose_down", "pick", "pick_pose_up", "hover_place_pose", "place_pose_down", "open_Hand", "place_pose_up", "init_pose"]
+        self.state_list = [" ", "hover_pose", "pick_pose_down", "pick", "pick_pose_up", "hover_place_pose", "place_pose_down", "open_Hand", "place_pose_up", "init_pose"]
+        self.time_label_list = [" ", "Real_time", "planning_time", "Execution_time"]
         self.fault_publisher = rospy.Publisher("fault_msg", faultmsg, queue_size=10)
         self.joint_state_fake_subscriber = rospy.Subscriber("joint_states_fake", JointState, self.callback)
         self.joint_state_fake_subscriber = rospy.Subscriber("joint_states", JointState, self.joint_callback)
+        #self.fault_sub = rospy.Subscriber("joint_states", Bool, self.fault_callback)
         self.joint_val = 0
         self.x = list(range(100))  # 100 time points
         self.y = [randint(0,100) for _ in range(100)]
         self.x2 = list(range(100))  # 100 time points
         self.y2 = [randint(0,100) for _ in range(100)]
+        self.i = 1
+        self.offset = 5
+        self.time_label_val = 0
+        self.time_val = 0
 
     def setupUi(self, Test_window):
         Test_window.setObjectName("Test_window")
@@ -61,28 +68,39 @@ class Ui_Test_window(object):
         self.comboBox_3 = QtWidgets.QComboBox(self.centralwidget)
         self.comboBox_3.setGeometry(QtCore.QRect(20, 260, 281, 21))
         self.comboBox_3.setObjectName("comboBox_3")
+        self.comboBox_4 = QtWidgets.QComboBox(self.centralwidget)
+        self.comboBox_4.setGeometry(QtCore.QRect(20, 400, 281, 21))
+        self.comboBox_4.setObjectName("comboBox_4")
         self.label_4 = QtWidgets.QLabel(self.centralwidget)
         self.label_4.setGeometry(QtCore.QRect(30, 320, 91, 21))
         self.label_4.setObjectName("label_4")
         self.progressBar = QtWidgets.QProgressBar(self.centralwidget)
         self.progressBar.setGeometry(QtCore.QRect(120, 620, 118, 23))
-        self.progressBar.setProperty("value", 24)
+        self.progressBar.setProperty("value", 0)
         self.progressBar.setObjectName("progressBar")
         self.horizontalSlider = QtWidgets.QSlider(self.centralwidget)
         self.horizontalSlider.setGeometry(QtCore.QRect(140, 320, 160, 16))
         self.horizontalSlider.setOrientation(QtCore.Qt.Horizontal)
         self.horizontalSlider.setObjectName("horizontalSlider")
+        self.horizontalSlider.setMinimum(1)
+        self.horizontalSlider.setMaximum(10)
+        self.horizontalSlider.setValue(5)
+        self.horizontalSlider.setTickPosition(QSlider.TicksBelow)
+        self.horizontalSlider.setTickInterval(1)
+		
+        #layout.addWidget(self.sl)
+        self.horizontalSlider.valueChanged.connect(self.valuechange)
         self.label_5 = QtWidgets.QLabel(self.centralwidget)
         self.label_5.setGeometry(QtCore.QRect(140, 340, 16, 21))
         self.label_5.setObjectName("label_5")
         self.label_6 = QtWidgets.QLabel(self.centralwidget)
         self.label_6.setGeometry(QtCore.QRect(280, 340, 16, 21))
         self.label_6.setObjectName("label_6")
-        self.timeEdit = QtWidgets.QTimeEdit(self.centralwidget)
-        self.timeEdit.setGeometry(QtCore.QRect(180, 400, 118, 26))
-        self.timeEdit.setObjectName("timeEdit")
+        self.spinBox = QtWidgets.QSpinBox(self.centralwidget)
+        self.spinBox.setGeometry(QtCore.QRect(180, 450, 48, 26))
+        self.spinBox.setObjectName("spinBox") 
         self.label_7 = QtWidgets.QLabel(self.centralwidget)
-        self.label_7.setGeometry(QtCore.QRect(30, 400, 141, 21))
+        self.label_7.setGeometry(QtCore.QRect(20, 450, 158, 21))
         self.label_7.setObjectName("label_7")
         self.widget = QtWidgets.QWidget(self.centralwidget)
         self.widget.setGeometry(QtCore.QRect(350, 70, 401, 251))
@@ -108,7 +126,10 @@ class Ui_Test_window(object):
         layout_2 = QGridLayout()
         self.widget_2.setLayout(layout_2)
         layout_2.addWidget(self.plot_2, 0, 1, 3, 1)
-
+        self.timer = QtCore.QTimer()
+        self.timer.setInterval(60)
+        self.timer.timeout.connect(self.update_plot_data)
+        self.timer.start()
 
         self.graphicsView = QtWidgets.QGraphicsView(self.centralwidget)
         self.graphicsView.setGeometry(QtCore.QRect(780, 40, 231, 591))
@@ -122,6 +143,9 @@ class Ui_Test_window(object):
         self.label_10 = QtWidgets.QLabel(self.centralwidget)
         self.label_10.setGeometry(QtCore.QRect(500, 340, 181, 20))
         self.label_10.setObjectName("label_10")
+        self.label_11 = QtWidgets.QLabel(self.centralwidget)
+        self.label_11.setGeometry(QtCore.QRect(20, 370, 81, 20))
+        self.label_11.setObjectName("label_11")
         Test_window.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(Test_window)
         self.statusbar.setObjectName("statusbar")
@@ -142,16 +166,20 @@ class Ui_Test_window(object):
         self.label_4.setText(_translate("Test_window", "Offset Value"))
         self.label_5.setText(_translate("Test_window", "1"))
         self.label_6.setText(_translate("Test_window", "10"))
-        self.label_7.setText(_translate("Test_window", "Time to inject fault"))
+        self.label_7.setText(_translate("Test_window", "Time to inject fault in s"))
         self.label_8.setText(_translate("Test_window", "Value"))
         self.label_9.setText(_translate("Test_window", "Real Sensor Data"))
         self.label_10.setText(_translate("Test_window", "Fault Injected Sensor Data"))
+        self.label_11.setText(_translate("Test_window", "Time Label"))
         self.comboBox.addItems(self.fault_list)
         self.comboBox.activated[str].connect(self.select_noise)
         self.comboBox_2.addItems(self.joint_list)
         self.comboBox_2.activated[str].connect(self.select_joint)
         self.comboBox_3.addItems(self.state_list)
         self.comboBox_3.activated[str].connect(self.select_state)
+        self.comboBox_4.addItems(self.time_label_list)
+        self.comboBox_4.activated[str].connect(self.select_time_label)  
+        self.spinBox.valueChanged.connect(self.set_time)
         image_path = "/home/acefly/Pictures/panda_2.jpg"
         if os.path.isfile(image_path):
                 scene = QtWidgets.QGraphicsScene()
@@ -161,8 +189,9 @@ class Ui_Test_window(object):
                 self.graphicsView.setScene(scene)
 
 
-
-
+    def valuechange(self):
+        self.offset = self.horizontalSlider.value()
+        #print(self.offset)
 
     def select_noise(self, text):
         #print("hello you selected : ", text)
@@ -177,13 +206,25 @@ class Ui_Test_window(object):
         self.state_val = self.state_list.index(state_text)
         print("state: ", self.state_val)
 
+    def select_time_label(self, time_label_text):
+        self.time_label_val = self.time_label_list.index(time_label_text)
+        print("time_label: ", self.time_label_val)
+
+    def set_time(self):
+        self.time_val = self.spinBox.value()
+        print("time: ", self.time_val)
+
     def publish_fault(self):
         print("clicked")
         msg = faultmsg() 
-        msg.fault = self.fault_val
-        msg.joint = int(self.joint_val)-1
-        msg.pose = self.state_val
+        msg.fault = int(self.fault_val)
+        msg.joint = int(self.joint_val-1)
+        msg.pose = int(self.state_val)
+        msg.offset = int(self.offset)
+        msg.time = int(self.time_val)
+        msg.time_label = int(self.time_label_val)
         self.fault_publisher.publish(msg)
+        
 
     def callback(self, data):
         self.joint_data = data
@@ -194,7 +235,7 @@ class Ui_Test_window(object):
         self.x.append(seconds)  
         self.y = self.y[1:]  
         self.y.append(self.list_joint_data[int(self.joint_val)-1]) 
-        self.data_line.setData(self.x, self.y) 
+         
 
     def joint_callback(self, data):
         self.joint_data_2 = data
@@ -205,17 +246,19 @@ class Ui_Test_window(object):
         self.x2.append(seconds_2)  
         self.y2 = self.y2[1:]  
         self.y2.append(self.list_joint_data_2[int(self.joint_val)-1]) 
-        self.data_line_2.setData(self.x2, self.y2) 
+         
 
-    #def update_plot_data(self):
+    def update_plot_data(self):
 
         #self.x = self.x[1:]  # Remove the first y element.
         #self.x.append(self.x[-1] + 1)  # Add a new value 1 higher than the last.
 
         #self.y = self.y[1:]  # Remove the first
         #self.y.append( randint(0,100))  # Add a new random value.
+        self.data_line.setData(self.x, self.y)
+        self.data_line_2.setData(self.x2, self.y2)
 
-        
+    
 
 
 if __name__ == "__main__":

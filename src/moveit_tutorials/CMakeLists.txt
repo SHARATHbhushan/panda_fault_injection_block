@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1.3)
+cmake_minimum_required(VERSION 3.0.2)
 project(moveit_tutorials)
 
 find_package(catkin REQUIRED
@@ -18,17 +18,16 @@ find_package(catkin REQUIRED
     tf2_ros
     tf2_eigen
     tf2_geometry_msgs
+    std_msgs
+    genmsg 
 )
 
 find_package(Eigen3 REQUIRED)
-find_package(Boost REQUIRED system filesystem date_time thread)
+find_package(Boost REQUIRED system filesystem date_time thread )
 
-set(THIS_PACKAGE_INCLUDE_DIRS
-  doc/interactivity/include
-)
 
 catkin_package(
-  LIBRARIES
+  LIBRARIES 
   INCLUDE_DIRS
   CATKIN_DEPENDS
     moveit_core
@@ -43,6 +42,8 @@ catkin_package(
 ###########
 ## Build ##
 ###########
+
+
 
 include_directories(${THIS_PACKAGE_INCLUDE_DIRS})
 include_directories(SYSTEM ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIRS})

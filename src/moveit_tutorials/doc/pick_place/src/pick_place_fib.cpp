@@ -19,6 +19,8 @@
 #include <moveit/trajectory_processing/iterative_time_parameterization.h>
 #include "std_msgs/Bool.h"
 #include "std_msgs/Int32.h"
+#include "std_msgs/String.h"
+
 // The circle constant tau = 2*pi. One tau is one rotation in radians.
 const double tau = 2 * M_PI;
 
@@ -31,7 +33,7 @@ void initPose(moveit::planning_interface::MoveGroupInterface& move_group)
 { 
   // We can plan a motion for this group to a desired pose for the
   // end-effector.
-  ros::Duration(2, 0).sleep();
+  ros::Duration(5, 0).sleep();
   geometry_msgs::Pose target_pose_init;
 
   //Convert Orienation from RPY to Quaternion
@@ -61,7 +63,7 @@ void hoverPose(moveit::planning_interface::MoveGroupInterface& move_group, float
   //std_msgs::Int32 pose_state;
   //pose_state.data = 1;
   //status.data = true;
-  ros::Duration(2, 0).sleep();
+  ros::Duration(5, 0).sleep();
   //goal_pub.publish(status);
   //Convert Orienation from RPY to Quaternion
   tf2::Quaternion orientation;
@@ -87,7 +89,7 @@ void pickPose(moveit::planning_interface::MoveGroupInterface& move_group_interfa
 
   //status.data = false;
   //goal_pub.publish(status);
-  ros::Duration(2, 0).sleep();
+  ros::Duration(5, 0).sleep();
   moveit::planning_interface::MoveGroupInterface::Plan cartesianPlan;
   move_group_interface.setStartStateToCurrentState();
 
@@ -146,7 +148,7 @@ void hoverPlacePose(moveit::planning_interface::MoveGroupInterface& move_group, 
 { 
   // We can plan a motion for this group to a desired pose for the
   // end-effector.
-  ros::Duration(2, 0).sleep();
+  ros::Duration(5, 0).sleep();
   geometry_msgs::Pose pose_hover_place;
 
   //Convert Orienation from RPY to Quaternion
@@ -168,7 +170,7 @@ void hoverPlacePose(moveit::planning_interface::MoveGroupInterface& move_group, 
 
 void PlacePose(moveit::planning_interface::MoveGroupInterface& move_group_interface, std::string direction)
 { 
-  ros::Duration(2, 0).sleep();
+  ros::Duration(5, 0).sleep();
   moveit::planning_interface::MoveGroupInterface::Plan cartesianPlan;
   move_group_interface.setStartStateToCurrentState();
 
@@ -276,7 +278,7 @@ void closedGripper(trajectory_msgs::JointTrajectory& posture, float y)
 
 void pick(moveit::planning_interface::MoveGroupInterface& move_group, float y)
 {
-  ros::Duration(2, 0).sleep();
+  ros::Duration(5, 0).sleep();
   //Create Vector for grasp approaches (only need 1)
   std::vector<moveit_msgs::Grasp> grasps;
   grasps.resize(1);
@@ -313,7 +315,7 @@ void pick(moveit::planning_interface::MoveGroupInterface& move_group, float y)
 
 void openHand(moveit::planning_interface::MoveGroupInterface& move_group_interface_hand)
 { 
-  ros::Duration(2, 0).sleep();
+  ros::Duration(5, 0).sleep();
   // Open the gripper
   move_group_interface_hand.setJointValueTarget(move_group_interface_hand.getNamedTargetValues("open"));
 
@@ -402,7 +404,18 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
   planning_scene_interface.applyCollisionObjects(collision_objects);
 }
 
+class Listener 
+{
+  public:
+    int time_to_inject;
 
+    void callback(const std_msgs::Int32::ConstPtr& msg);
+};
+
+void Listener::callback(const std_msgs::Int32::ConstPtr& msg) 
+{
+    time_to_inject = msg->data;
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char** argv)
@@ -415,9 +428,14 @@ int main(int argc, char** argv)
   ros::Publisher goal_pub = nh.advertise<std_msgs::Bool>("goal_state", 1000);  
   ros::Publisher pose_state_pub = nh.advertise<std_msgs::Int32>("pose_state", 1000);  
   ros::Publisher iterations = nh.advertise<std_msgs::Int32>("iterations", 1000);
+  //add ros subscriber?
+  //Listener listener;
+  //ros::Subscriber sub = nh.subscribe<std_msgs::Int32>("time_to_inject", 1, &Listener::callback, &listener);
+
+
+
   spinner.start();
   ros::WallDuration(1.0).sleep();
-
   // use for planning scene
   moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
 

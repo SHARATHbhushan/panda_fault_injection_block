@@ -1,7 +1,0 @@
-panda-gazebo/franka_ros/franka_visualization
-/home/acefly/robot_fib/devel/.private/franka_visualization/cmake.lock /home/acefly/robot_fib/devel/./cmake.lock
-/home/acefly/robot_fib/devel/.private/franka_visualization/share/franka_visualization/cmake/franka_visualizationConfig.cmake /home/acefly/robot_fib/devel/share/franka_visualization/cmake/franka_visualizationConfig.cmake
-/home/acefly/robot_fib/devel/.private/franka_visualization/share/franka_visualization/cmake/franka_visualizationConfig-version.cmake /home/acefly/robot_fib/devel/share/franka_visualization/cmake/franka_visualizationConfig-version.cmake
-/home/acefly/robot_fib/devel/.private/franka_visualization/lib/pkgconfig/franka_visualization.pc /home/acefly/robot_fib/devel/lib/pkgconfig/franka_visualization.pc
-/home/acefly/robot_fib/devel/.private/franka_visualization/lib/franka_visualization/gripper_joint_state_publisher /home/acefly/robot_fib/devel/lib/franka_visualization/gripper_joint_state_publisher
-/home/acefly/robot_fib/devel/.private/franka_visualization/lib/franka_visualization/robot_joint_state_publisher /home/acefly/robot_fib/devel/lib/franka_visualization/robot_joint_state_publisher

@@ -1,2 +1,0 @@
-panda-gazebo/franka_ros/franka_ros
-/home/acefly/robot_fib/devel/.private/franka_ros/cmake.lock /home/acefly/robot_fib/devel/./cmake.lock
