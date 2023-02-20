@@ -38,10 +38,17 @@ class firos_rand:
         #print(rand_msg.pose)
         
     def iter_callback(self,data):
+        self.iter = data.data
         rand_msg = faultmsg()
         self.desired_joint = random.randint(0, 8)
         self.desired_state = random.randint(1, 9)
         self.desired_fault = random.randint(1, 4)
+        self.desired_time_label = random.randint(1, 3)
+        self.desired_offset = random.randint(1,10)
+        self.desired_time = random.randint(1, 4)
+        rand_msg.time = self.desired_time
+        rand_msg.time_label = self.desired_time_label
+        rand_msg.offset = self.desired_offset
         rand_msg.fault = self.desired_fault
         rand_msg.joint = self.desired_joint
         rand_msg.pose = self.desired_state

@@ -109,7 +109,8 @@ class firos:
                     self.list_joint_data[self.joint] = self.fault_val_list[0]
                 else:
                     self.list_joint_data[self.joint] = self.list_joint_data[self.joint] + self.fault_val
-                print(self.list_joint_data[self.joint])
+                #print(self.list_joint_data[self.joint])
+                rospy.INFO("Fault_injection in progress")
                 #print("noise error injected")
                 self.joint_data.position = tuple(self.list_joint_data)
                 #self.joint_data.position[1] = error_data
