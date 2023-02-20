@@ -29,10 +29,14 @@ class firos:
         object_6 = data.name[6]
         object_7 = data.name[7]
         object_8 = data.name[8]
+        object_9 = data.name[9]
+        object_10 = data.name[10]
+        object_11 = data.name[11]
         object_12 = data.name[12]
         print(object_12)
         self.collision_1.append(data.pose[12].position)
-        
+ 
+
         """  
         collision_x_2 = data.pose[2].position.x
         collision_x_3 = data.pose[3].position.x

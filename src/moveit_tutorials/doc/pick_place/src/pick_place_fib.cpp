@@ -242,8 +242,8 @@ void closedGripper(trajectory_msgs::JointTrajectory& posture, float y)
   if(y==0){
      float f1 = 0.0006;
      float f2 = 0.0006;
-     float e1 = 400;
-     float e2 = 400;
+     float e1 = 600;
+     float e2 = 600;
    }
   else if(y == 0.28){
      float f1 = 0.001;
