@@ -8,7 +8,7 @@ class goal_listener:
         rospy.Subscriber("goal_state", Bool, self.callback)
         #rospy.Subscriber("joint_states", JointState, self.publisher)
         self.pub = rospy.Publisher('goal_msg', Bool, queue_size=10)
-        self.pub2 = rospy.Publisher('fake', Bool, queue_size=10)
+        self.pub2 = rospy.Publisher('goal_state', Bool, queue_size=10)
         rospy.Subscriber("fault_msg", faultmsg, self.fault_callback)
         self.rate = rospy.Rate(30) # 10hz
         self.flag = False
@@ -27,6 +27,26 @@ class goal_listener:
     def fault_callback(self,data):
         self.desired_time_label = data.time_label
         self.desired_time = data.time
+        self.real_time_exec = rospy.Time.now()
+        self.real_time_val = rospy.Duration(self.desired_time) 
+        self.real_endTime = self.real_time_exec + self.real_time_val
+        self.goal_msg = Bool()
+        self.goal_state = Bool()
+        if self.desired_time_label == 1:
+                    #print("state 0")
+                    print("real_time_injection")
+                    self.goal_state = True
+                    self.pub2.publish(self.goal_state)
+                    #print("start: ", self.real_time_exec, "sec : ", self.real_time_val, "end: ", self.real_endTime)
+                    while rospy.Time.now() < self.real_endTime:
+                        self.goal_msg.data = True
+                        #print("state 1")
+                        self.pub.publish(self.goal_msg)
+                        rospy.sleep(0.1)
+                    self.goal_state = False
+                    self.pub2.publish(self.goal_state)
+                    self.goal_msg.data = False
+                    self.pub.publish(self.goal_msg)
 
         
     def callback(self,data):
@@ -48,34 +68,26 @@ class goal_listener:
 
 
 
-    #def publisher(self,data):
+        #def publisher(self,data):
         self.goal_msg = Bool()
         if data:    
             if self.flag == True:
-                print(True)
-                if self.desired_time_label == 1:
-                    print("state 0")
-                    print("start: ", self.real_time_exec, "sec : ", self.real_time_val, "end: ", self.real_endTime)
-                    while rospy.Time.now() < self.real_endTime:
-                        self.goal_msg.data = True
-                        print("state 1")
-                        self.pub.publish(self.goal_msg)
-                        rospy.sleep(0.1)
+                #print(True)
 
                 #self.flag = False
 
                 if self.desired_time_label == 2:
-                    print("state 2")
-                    print("start: ", self.plan_time_exec, "sec : ", self.plan_time_val, "end: ", self.plan_endTime)
+                    #print("state 2")
+                    #print("start: ", self.plan_time_exec, "sec : ", self.plan_time_val, "end: ", self.plan_endTime)
                     while rospy.Time.now() < self.plan_endTime:
-                        print("state 2.1")
+                        #print("state 2.1")
                         self.goal_msg.data = False
                         self.pub.publish(self.goal_msg)
                         rospy.sleep(0.1)
                     time_offset = rospy.Time.now()
                     planning_offset = rospy.Duration(1)
                     while rospy.Time.now() < self.real_time_val+time_offset+planning_offset:
-                        print("state 2.2")
+                        #print("state 2.2")
                         self.goal_msg.data = True
                         self.pub.publish(self.goal_msg)
                         rospy.sleep(0.1)
@@ -84,15 +96,15 @@ class goal_listener:
                 self.flag = False
                 
                 if self.desired_time_label == 3:
-                    print("state 3")
+                    #print("state 3")
                     while rospy.Time.now() < self.exec_endTime:
-                        print("state 3.1")
+                        #print("state 3.1")
                         self.goal_msg.data = False
                         self.pub.publish(self.goal_msg)
                         rospy.sleep(0.1)
                     time_offset = rospy.Time.now()
                     while rospy.Time.now() < self.real_time_val+time_offset:
-                        print("state 3.2")
+                        #print("state 3.2")
                         self.goal_msg.data = True
                         self.pub.publish(self.goal_msg)
                         rospy.sleep(0.1)

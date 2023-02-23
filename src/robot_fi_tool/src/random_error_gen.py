@@ -20,10 +20,19 @@ class firos_rand:
         self.goal_state_subscriber = rospy.Subscriber("iterations", Int32, self.iter_callback)
         self.random_fault_publisher = rospy.Publisher("fault_msg", faultmsg, queue_size=10)
         self.state_subscriber = rospy.Subscriber("pose_state", Int32,self.state_callback)
+
         self.goal = False
         self.desired_state = 0
         self.desired_joint = 0
         self.desired_fault = 0
+        self.desired_time_label = 0
+        self.desired_offset = 0
+        self.desired_time = 0
+        self.iter = 0
+        self.state = 0
+        self.min_offset = rospy.get_param("/min_offset")
+        self.max_offset = rospy.get_param("/max_offset")
+        self.iter_msg = False
 
 
 
@@ -39,26 +48,39 @@ class firos_rand:
         
     def iter_callback(self,data):
         self.iter = data.data
-        rand_msg = faultmsg()
-        self.desired_joint = random.randint(0, 8)
-        self.desired_state = random.randint(1, 9)
-        self.desired_fault = random.randint(1, 4)
-        self.desired_time_label = random.randint(1, 3)
-        self.desired_offset = random.randint(1,10)
-        self.desired_time = random.randint(1, 4)
-        rand_msg.time = self.desired_time
-        rand_msg.time_label = self.desired_time_label
-        rand_msg.offset = self.desired_offset
-        rand_msg.fault = self.desired_fault
-        rand_msg.joint = self.desired_joint
-        rand_msg.pose = self.desired_state
-        print(self.fault_list[self.desired_fault] + " Fault is being injected at state " + self.state_list[self.desired_state] + " in joint " + self.joint_list[self.desired_joint])
-        print("fault : ", self.desired_fault)
-        print("joint : ", self.desired_joint)
-        print("state : ", self.desired_state)
-        self.random_fault_publisher.publish(rand_msg)
-                
+        self.iter_msg = True
+        self.rand_time = random.randint(5,15)
+        self.real_time_exec = rospy.Time.now()
+        self.real_time_val = rospy.Duration(self.rand_time) 
+        rospy.sleep(self.real_time_val)
+        print("injecting")
+        self.timer_callback()
 
+        
+                
+    def timer_callback(self):
+        if self.iter_msg == True:
+            rand_msg = faultmsg()
+            self.desired_joint = random.randint(0, 8)
+            self.desired_state = random.randint(1, 9)
+            self.desired_fault = random.randint(1, 4)
+            self.desired_time_label = random.randint(1, 3) #disable for real and execution time fault injection
+            #self.desired_time_label = 1
+            self.desired_offset = random.randint(self.min_offset,self.max_offset)
+            self.desired_time = random.randint(1, 5)
+            rand_msg.time = self.desired_time
+            rand_msg.time_label = self.desired_time_label
+            rand_msg.offset = self.desired_offset
+            rand_msg.fault = self.desired_fault
+            rand_msg.joint = self.desired_joint
+            rand_msg.pose = self.desired_state
+            print(self.fault_list[self.desired_fault] + " Fault is being injected at state " + self.state_list[self.desired_state] + " in joint " + self.joint_list[self.desired_joint])
+            print("fault : ", self.desired_fault)
+            print("joint : ", self.desired_joint)
+            print("state : ", self.desired_state)
+            self.random_fault_publisher.publish(rand_msg)
+        self.iter_msg = False
+        
 if __name__ == '__main__':
     rospy.init_node('random_fault_gen')
     firos_rand()

@@ -7,6 +7,10 @@ import numpy as np
 from std_msgs.msg import Bool
 from std_msgs.msg import Int32
 from robot_fi_tool.msg import faultmsg
+from subprocess import call
+from subprocess import Popen  
+import subprocess
+from std_srvs.srv import Empty
 
 '''
 desired_state : 
@@ -47,6 +51,8 @@ class firos:
     def __init__(self):
         #noise = np.random.normal(10,1,1)
         #print(noise)
+        pause_physics_client=rospy.ServiceProxy('/gazebo/pause_physics',Empty)
+        self.goal_state_subscriber = rospy.Subscriber("goal_state", Bool, self.goal_state_callback)
         self.goal_state_subscriber = rospy.Subscriber("goal_msg", Bool, self.goal_callback)
         self.joint_state_publisher = rospy.Publisher("joint_states", JointState, queue_size=10)
         self.fault_status = rospy.Publisher("fault_status", Bool, queue_size=10)
@@ -63,6 +69,21 @@ class firos:
         self.fault_val_list = []
         self.state = 0
         self.fault_status.publish(False)
+        self.proc = None
+        self.desired_time = 0
+        self.desired_time_label = 0
+        self.desired_offset = 0
+        self.package_drop_flag = False  
+        self.drop_rate = 1
+        self.package_drop_state = False
+        self.min_mean = rospy.get_param("/min_mean")
+        self.max_mean = rospy.get_param("/max_mean")
+        self.min_drop_rate = rospy.get_param("/min_drop_rate")
+        self.max_drop_rate = rospy.get_param("/max_drop_rate")
+        self.min_sd = rospy.get_param("/min_sd")
+        self.max_sd = rospy.get_param("/max_sd")
+
+
 
     def fault_callback(self,fault_msg):
         self.desired_state = fault_msg.pose
@@ -98,17 +119,24 @@ class firos:
             self.fault_val_list.append(self.list_joint_data[self.joint]) #to be defined
         if self.desired_fault == 3:
             self.fault_val = -self.list_joint_data[self.joint]
+            # !use topic tools to create a package drop
         if self.desired_fault == 4:
-            self.fault_val = 5
+            self.fault_val = self.desired_offset
 
         if self.goal == True:
+            if self.desired_fault == 3:
+                if self.package_drop_state == False:
+                    self.package_drop_flag = True
             if self.state == self.desired_state:
                 #print(self.list_joint_data)
                 self.fault_status.publish(True)
                 if self.desired_fault == 2:
                     self.list_joint_data[self.joint] = self.fault_val_list[0]
+                elif self.desired_fault == 3:
+                    self.package_drop_flag = True
                 else:
                     self.list_joint_data[self.joint] = self.list_joint_data[self.joint] + self.fault_val
+                
                 #print(self.list_joint_data[self.joint])
                 
                 #print("noise error injected")
@@ -118,8 +146,32 @@ class firos:
                 #self.joint_state_publisher.publish(data)
                 self.goal = False
         #print(self.joint_data)
-        self.joint_state_publisher.publish(self.joint_data)
-        #self.goal = True
+        if self.package_drop_flag == True:
+            pass
+        else:
+            self.joint_state_publisher.publish(self.joint_data)
+        self.package_drop_flag == False
+        self.fault_status.publish(False)
+
+    def goal_state_callback(self,goal_state):
+        self.goal_state = goal_state.data
+        print(self.goal_state)
+        
+        if self.goal_state == True:
+            if self.desired_fault == 3:
+                self.fault_status.publish(True)
+                print("works")
+                self.proc = subprocess.Popen(["rosrun", "topic_tools", "drop" ,"joint_states_fake", "1", "1", "joint_states"])
+        else:
+            self.fault_status.publish(False)
+            if self.proc:
+                if self.desired_fault == 3:
+                    self.proc.kill()
+                    self.package_drop_flag = False
+                    self.package_drop_state = True
+                    self.proc = None
+        self.fault_status.publish(False)
+
 
 if __name__ == '__main__':
     rospy.init_node('FIB')

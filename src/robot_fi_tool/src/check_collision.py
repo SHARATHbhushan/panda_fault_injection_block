@@ -14,11 +14,32 @@ class firos:
     def __init__(self):
         #noise = np.random.normal(10,1,1)
         #print(noise)
-        self.collision_1 = []
+        self.person = []
+        self.platform = []
+        self.tangram_1 = []
+        self.tangram_2 = []
+        self.tangram_3 = []
+        self.tangram_4 = []
+        self.tangram_5 = []
+        self.tangram_6 = []
+        self.tangram_7 = []
+        self.flat_back = []
+        self.flat_right = []
         self.i = 0
         self.goal_state_subscriber = rospy.Subscriber("/gazebo/model_states", ModelStates, self.collision_callback)
-        self.joint_state_publisher = rospy.Publisher("/collision_model", String, queue_size=10)
-        
+        self.collision_state_publisher = rospy.Publisher("/collision_model", String, queue_size=10)
+        self.person_state = False
+        self.platform_state = False
+        self.tangram_1_state = False
+        self.tangram_2_state = False
+        self.tangram_3_state = False
+        self.tangram_4_state = False
+        self.tangram_5_state = False
+        self.tangram_6_state = False
+        self.tangram_7_state = False
+        self.flat_back_state = False
+        self.flat_right_state = False
+
     
     def collision_callback(self,data): 
         object_1 = data.name[1]
@@ -32,10 +53,20 @@ class firos:
         object_9 = data.name[9]
         object_10 = data.name[10]
         object_11 = data.name[11]
-        object_12 = data.name[12]
-        print(object_12)
-        self.collision_1.append(data.pose[12].position)
- 
+        #object_12 = data.name[12]
+        #print(object_1)
+        
+        self.person.append(data.pose[12].position)
+        self.platform.append(data.pose[1].position)
+        self.flat_back.append(data.pose[9].position)
+        self.flat_right.append(data.pose[10].position)
+        self.tangram_1.append(data.twist[2].linear.x)
+        self.tangram_2.append(data.twist[3].linear.x)
+        self.tangram_3.append(data.twist[4].linear.x)
+        self.tangram_4.append(data.twist[5].linear.x)
+        self.tangram_5.append(data.twist[6].linear.x)
+        self.tangram_6.append(data.twist[7].linear.x)
+        self.tangram_7.append(data.twist[8].linear.x)
 
         """  
         collision_x_2 = data.pose[2].position.x
@@ -47,10 +78,69 @@ class firos:
         collision_x_8 = data.pose[8].position.x
         collision_X_9 = data.pose[9].position.x 
         """
+        if abs(self.tangram_1[self.i]) > 10:
+            if self.tangram_1_state == False:
+                print("tangram_1 fall detected")
+                self.tangram_1_state = True
         
-        if self.collision_1[self.i] != self.collision_1[self.i - 1]:
-            print("collision detected")
+        if abs(self.tangram_2[self.i]) > 10:
+            if self.tangram_2_state == False:
+                print("tangram_2 fall detected")
+                self.tangram_2_state = True
+        
+        if abs(self.tangram_3[self.i]) > 10:
+            if self.tangram_3_state == False:
+                print("tangram_3 fall detected")
+                self.tangram_3_state = True
+        
+        if abs(self.tangram_4[self.i]) > 10:
+            if self.tangram_4_state == False:
+                print("tangram_4 fall detected")
+                self.tangram_4_state = True
+
+        if abs(self.tangram_5[self.i]) > 10:
+            if self.tangram_5_state == False:
+                print("tangram_5 fall detected")
+                self.tangram_5_state = True
+
+        if abs(self.tangram_6[self.i]) > 10:
+            if self.tangram_6_state == False:
+                print("tangram_6 fall detected")
+                self.tangram_6_state = True
+        
+        if abs(self.tangram_7[self.i]) > 10:
+            if self.tangram_7_state == False:
+                print("tangram_7 fall detected")
+                self.tangram_7_state = True
+        
+        
+        if self.person[self.i] != self.person[self.i - 1]:
+            if self.person_state == False:
+                print("human collision detected")
+                self.person_state = True
+
+        if self.platform[self.i] != self.platform[self.i - 1]:
+            if self.platform_state == False:
+                print("platform collision detected")
+                self.platform_state = True
+
+ 
+        if self.flat_back[self.i] != self.flat_back[self.i - 1]:
+            if self.flat_back_state == False:
+                print("flat_back collision detected")
+                self.flat_back_state = True
+
+
+        if self.flat_right[self.i] != self.flat_right[self.i - 1]:
+            if self.flat_right_state == False:
+                print("flat_right collision detected")
+                self.flat_right_state = True
+
+
+
         self.i = self.i + 1
+        
+
 
 if __name__ == '__main__':
     rospy.init_node('gazebo_collision')

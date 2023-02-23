@@ -159,8 +159,8 @@ class Ui_Test_window(object):
     def retranslateUi(self, Test_window):
         _translate = QtCore.QCoreApplication.translate
         Test_window.setWindowTitle(_translate("Test_window", "MainWindow"))
-        self.label.setText(_translate("Test_window", "Topic"))
-        self.label_2.setText(_translate("Test_window", "Fault type"))
+        self.label.setText(_translate("Test_window", "Fault type"))
+        self.label_2.setText(_translate("Test_window", "Joint"))
         self.label_3.setText(_translate("Test_window", "Robot State"))
         self.pushButton.setText(_translate("Test_window", "Inject Fault"))
         self.label_4.setText(_translate("Test_window", "Offset Value"))

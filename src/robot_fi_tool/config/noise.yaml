@@ -1,0 +1,6 @@
+---
+fault_name: noise
+min_mean: -1  
+max_mean: 1
+min_sd: -1
+max_sd: 1

@@ -17,7 +17,7 @@
     <!--A cube-->
     <include>
       <uri>model://tangram_1</uri>
-      <pose>0.19 0.3 0.41 0 0 0</pose>
+      <pose>0.18 0.28 0.41 0 0 0</pose>
     </include>
     <include> 
       <uri>model://tangram_2</uri>
