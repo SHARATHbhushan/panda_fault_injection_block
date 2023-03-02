@@ -31,15 +31,18 @@ class Ui_Test_window(object):
         self.joint_state_fake_subscriber = rospy.Subscriber("joint_states_fake", JointState, self.callback)
         self.joint_state_fake_subscriber = rospy.Subscriber("joint_states", JointState, self.joint_callback)
         #self.fault_sub = rospy.Subscriber("joint_states", Bool, self.fault_callback)
-        self.joint_val = 0
         self.x = list(range(100))  # 100 time points
         self.y = [randint(0,100) for _ in range(100)]
         self.x2 = list(range(100))  # 100 time points
         self.y2 = [randint(0,100) for _ in range(100)]
         self.i = 1
-        self.offset = 5
+        self.offset = 0
         self.time_label_val = 0
         self.time_val = 0
+        self.state_val = 0
+        self.joint_val = 0
+        self.fault_val = 0
+
 
     def setupUi(self, Test_window):
         Test_window.setObjectName("Test_window")

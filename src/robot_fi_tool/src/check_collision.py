@@ -27,7 +27,7 @@ class firos:
         self.flat_right = []
         self.i = 0
         self.goal_state_subscriber = rospy.Subscriber("/gazebo/model_states", ModelStates, self.collision_callback)
-        self.collision_state_publisher = rospy.Publisher("/collision_model", String, queue_size=10)
+        self.collision_pub = rospy.Publisher("/collision_model", String, queue_size=10)
         self.person_state = False
         self.platform_state = False
         self.tangram_1_state = False
@@ -81,6 +81,7 @@ class firos:
         if abs(self.tangram_1[self.i]) > 10:
             if self.tangram_1_state == False:
                 print("tangram_1 fall detected")
+
                 self.tangram_1_state = True
         
         if abs(self.tangram_2[self.i]) > 10:
@@ -113,7 +114,7 @@ class firos:
                 print("tangram_7 fall detected")
                 self.tangram_7_state = True
         
-        
+
         if self.person[self.i] != self.person[self.i - 1]:
             if self.person_state == False:
                 print("human collision detected")
@@ -140,6 +141,7 @@ class firos:
 
         self.i = self.i + 1
         
+
 
 
 if __name__ == '__main__':

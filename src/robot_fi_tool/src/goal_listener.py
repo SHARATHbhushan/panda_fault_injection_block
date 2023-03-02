@@ -8,8 +8,9 @@ class goal_listener:
         rospy.Subscriber("goal_state", Bool, self.callback)
         #rospy.Subscriber("joint_states", JointState, self.publisher)
         self.pub = rospy.Publisher('goal_msg', Bool, queue_size=10)
-        self.pub2 = rospy.Publisher('goal_state', Bool, queue_size=10)
+        self.pub2 = rospy.Publisher('goal_flag', Bool, queue_size=10)
         rospy.Subscriber("fault_msg", faultmsg, self.fault_callback)
+        self.pub3 = rospy.Publisher('real_time_fi', Bool,queue_size=10)
         self.rate = rospy.Rate(30) # 10hz
         self.flag = False
         self.desired_time_label = -1
@@ -41,12 +42,12 @@ class goal_listener:
                     while rospy.Time.now() < self.real_endTime:
                         self.goal_msg.data = True
                         #print("state 1")
-                        self.pub.publish(self.goal_msg)
+                        self.pub3.publish(self.goal_msg)
                         rospy.sleep(0.1)
                     self.goal_state = False
                     self.pub2.publish(self.goal_state)
                     self.goal_msg.data = False
-                    self.pub.publish(self.goal_msg)
+                    self.pub3.publish(self.goal_msg)
 
         
     def callback(self,data):
@@ -86,11 +87,15 @@ class goal_listener:
                         rospy.sleep(0.1)
                     time_offset = rospy.Time.now()
                     planning_offset = rospy.Duration(1)
+                    self.goal_state = True
+                    self.pub2.publish(self.goal_state)
                     while rospy.Time.now() < self.real_time_val+time_offset+planning_offset:
                         #print("state 2.2")
                         self.goal_msg.data = True
                         self.pub.publish(self.goal_msg)
                         rospy.sleep(0.1)
+                    self.goal_state = False
+                    self.pub2.publish(self.goal_state)
                 self.goal_msg.data = False
                 self.pub.publish(self.goal_msg)
                 self.flag = False
@@ -103,11 +108,15 @@ class goal_listener:
                         self.pub.publish(self.goal_msg)
                         rospy.sleep(0.1)
                     time_offset = rospy.Time.now()
+                    self.goal_state = True
+                    self.pub2.publish(self.goal_state)
                     while rospy.Time.now() < self.real_time_val+time_offset:
                         #print("state 3.2")
                         self.goal_msg.data = True
                         self.pub.publish(self.goal_msg)
                         rospy.sleep(0.1)
+                    self.goal_state = False
+                    self.pub2.publish(self.goal_state)
                 self.goal_msg.data = False
                 self.pub.publish(self.goal_msg)
                 self.flag = False

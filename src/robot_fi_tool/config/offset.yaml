@@ -2,3 +2,4 @@
 fault_name: offset
 min_offset: 1
 max_offset: 10
+default_offset: 5

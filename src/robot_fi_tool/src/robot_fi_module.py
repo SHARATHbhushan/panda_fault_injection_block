@@ -51,8 +51,11 @@ class firos:
     def __init__(self):
         #noise = np.random.normal(10,1,1)
         #print(noise)
-        pause_physics_client=rospy.ServiceProxy('/gazebo/pause_physics',Empty)
-        self.goal_state_subscriber = rospy.Subscriber("goal_state", Bool, self.goal_state_callback)
+        
+        #pause_physics_client=rospy.ServiceProxy('/gazebo/pause_physics',Empty)
+
+        #ros init subscribers and publishers
+        self.goal_state_subscriber = rospy.Subscriber("goal_flag", Bool, self.goal_flag_callback)
         self.goal_state_subscriber = rospy.Subscriber("goal_msg", Bool, self.goal_callback)
         self.joint_state_publisher = rospy.Publisher("joint_states", JointState, queue_size=10)
         self.fault_status = rospy.Publisher("fault_status", Bool, queue_size=10)
@@ -60,28 +63,47 @@ class firos:
         self.state_subscriber = rospy.Subscriber("pose_state", Int32,self.state_callback)
         self.fault_msg_subscriber = rospy.Subscriber("fault_msg", faultmsg, self.fault_callback)
         self.publish_time = rospy.Publisher("time_to_inject", Int32, queue_size=10)
+        self.real_time_fi = rospy.Subscriber("real_time_fi", Bool, self.real_time_fi_callback)
+        
+        #setting up initial falgs
         self.goal = False
-        self.desired_state = 0
-        self.desired_joint = 0
-        self.desired_fault = 0
-        self.fault_val = 0
-        self.joint_val_list = []
-        self.fault_val_list = []
-        self.state = 0
         self.fault_status.publish(False)
-        self.proc = None
+        self.package_drop_flag = False  
+        self.package_drop_state = False
+        self.real_time_fi_flag = False
+
+
+        #setting up initial values
+        self.fault_val = 0
+        self.state = 0
         self.desired_time = 0
         self.desired_time_label = 0
         self.desired_offset = 0
-        self.package_drop_flag = False  
-        self.drop_rate = 1
-        self.package_drop_state = False
+        self.proc = None
+        self.joint_val_list = []
+        self.fault_val_list = []
+
+        #getting parameters from launch file
+        self.desired_fault = rospy.get_param("/default_fault")
+        self.desired_joint = rospy.get_param("/default_joint")
+        self.desired_state = rospy.get_param("/default_state")
+        self.desired_time = rospy.get_param("/default_time")
+        self.desired_time_label = rospy.get_param("/default_time_label")
+        self.desired_mean = rospy.get_param("/default_mean")
+        self.desired_sd = rospy.get_param("/default_sd")
+        self.desired_drop_rate = rospy.get_param("/default_drop_rate")
+        self.desired_offset = rospy.get_param("/default_offset")
+
+        #theses values are used for random fault injection
         self.min_mean = rospy.get_param("/min_mean")
         self.max_mean = rospy.get_param("/max_mean")
         self.min_drop_rate = rospy.get_param("/min_drop_rate")
         self.max_drop_rate = rospy.get_param("/max_drop_rate")
         self.min_sd = rospy.get_param("/min_sd")
         self.max_sd = rospy.get_param("/max_sd")
+        self.min_offset = rospy.get_param("/min_offset")
+        self.max_offset = rospy.get_param("/max_offset")
+        self.max_time = rospy.get_param("max_time")
 
 
 
@@ -92,6 +114,9 @@ class firos:
         self.desired_time = fault_msg.time
         self.desired_time_label = fault_msg.time_label
         self.desired_offset = fault_msg.offset
+        self.desired_mean = fault_msg.mean
+        self.desired_sd = fault_msg.sd
+        self.desired_drop_rate = fault_msg.drop_rate
         self.fault_val_list = []
         #self.publish_time.publish(self.desired_time)
         self.fault_status.publish(True)
@@ -127,6 +152,7 @@ class firos:
             if self.desired_fault == 3:
                 if self.package_drop_state == False:
                     self.package_drop_flag = True
+            
             if self.state == self.desired_state:
                 #print(self.list_joint_data)
                 self.fault_status.publish(True)
@@ -146,6 +172,31 @@ class firos:
                 #self.joint_state_publisher.publish(data)
                 self.goal = False
         #print(self.joint_data)
+
+        if self.real_time_fi_flag == True:
+            if self.desired_fault == 3:
+                if self.package_drop_state == False:
+                    self.package_drop_flag = True
+            
+            else:
+                #print(self.list_joint_data)
+                self.fault_status.publish(True)
+                if self.desired_fault == 2:
+                    self.list_joint_data[self.joint] = self.fault_val_list[0]
+                elif self.desired_fault == 3:
+                    self.package_drop_flag = True
+                else:
+                    self.list_joint_data[self.joint] = self.list_joint_data[self.joint] + self.fault_val
+                
+                #print(self.list_joint_data[self.joint])
+                
+                #print("noise error injected")
+                self.joint_data.position = tuple(self.list_joint_data)
+                #self.joint_data.position[1] = error_data
+                #self.joint_state_publisher.publish(self.joint_data)
+                #self.joint_state_publisher.publish(data)
+                self.real_time_fi = False
+
         if self.package_drop_flag == True:
             pass
         else:
@@ -153,10 +204,19 @@ class firos:
         self.package_drop_flag == False
         self.fault_status.publish(False)
 
-    def goal_state_callback(self,goal_state):
+    def real_time_fi_callback(self,real_time_fi):
+        if real_time_fi.data == True:
+            self.real_time_fi_flag = True
+        else:
+            self.real_time_fi_flag = False
+
+
+
+
+
+    def goal_flag_callback(self,goal_state):
         self.goal_state = goal_state.data
         print(self.goal_state)
-        
         if self.goal_state == True:
             if self.desired_fault == 3:
                 self.fault_status.publish(True)
@@ -170,6 +230,7 @@ class firos:
                     self.package_drop_flag = False
                     self.package_drop_state = True
                     self.proc = None
+        self.package_drop_state = False
         self.fault_status.publish(False)
 
 

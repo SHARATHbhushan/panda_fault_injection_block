@@ -1,0 +1,7 @@
+---
+default_fault: 0
+default_state: 0
+default_joint: 0
+default_time: 0
+default_time_label: 0
+max_time: 5
