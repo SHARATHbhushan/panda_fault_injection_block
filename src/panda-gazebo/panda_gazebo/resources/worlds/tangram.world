@@ -45,7 +45,11 @@
     </include>
     <include>
       <uri>model://flat_back</uri>
-      <pose>-0.5 0 0.481 0 0 0</pose>
+      <pose>-0.4 0 0.481 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://flat_front</uri>
+      <pose>0.7 0 0.481 0 0 0</pose>
     </include>
     <include>
       <uri>model://flat_right</uri>

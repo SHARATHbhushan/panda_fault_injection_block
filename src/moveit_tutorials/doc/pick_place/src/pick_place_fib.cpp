@@ -449,7 +449,7 @@ int main(int argc, char** argv)
   group_arm.setMaxAccelerationScalingFactor(0.02);
   //group_arm.setNumPlanningAttempts(2);
   float pick_x[7] = {0.228, 0.376, 0.228, 0.232, 0.375, 0.22, 0.375};
-  float pick_y[7] = {0.28, 0.278, 0.42, 0.1, 0.1, 0, 0.45};
+  float pick_y[7] = {0.28, 0.278, 0.417, 0.1, 0.1, 0, 0.45};
   float place_x[7] = {0.225, 0.376, 0.232, 0.232, 0.375, 0.3, 0.375};
   float place_y[7] = {-0.302, -0.290, -0.42, -0.1, -0.1, 0, -0.45};
   bool status;

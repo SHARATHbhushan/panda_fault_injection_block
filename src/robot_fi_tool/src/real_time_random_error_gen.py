@@ -7,6 +7,8 @@ from std_msgs.msg import Int32
 from robot_fi_tool.msg import faultmsg
 import random
 
+from datetime import timedelta  
+
 class firos_rand:
 
 
@@ -16,10 +18,9 @@ class firos_rand:
         self.fault_list = [" ","noise", "stuck_at", "package_drop", "offset"]
         self.joint_list = [" ", "panda_joint1", "panda_joint2", "panda_joint3", "panda_joint4", "panda_joint5", "panda_joint6", "panda_joint7", "panda_finger_joint1", "panda_finger_joint2"]
         self.state_list = [" ", "hover_pose", "pick_pose_down", "pick_pose_down", "pick", "pick_pose_up", "hover_place_pose", "place_pose_down", "open_Hand", "place_pose_up", "init_pose"]
-        self.goal_state_subscriber = rospy.Subscriber("goal_msg", Bool, self.goal_callback)
-        self.goal_state_subscriber = rospy.Subscriber("iterations", Int32, self.iter_callback)
+
         self.random_fault_publisher = rospy.Publisher("fault_msg", faultmsg, queue_size=10)
-        self.state_subscriber = rospy.Subscriber("pose_state", Int32,self.state_callback)
+        self.reset_world = rospy.Publisher("reset_world", Bool, queue_size=10)
 
         self.min_mean = rospy.get_param("/min_mean")
         self.max_mean = rospy.get_param("/max_mean")
@@ -47,39 +48,50 @@ class firos_rand:
         self.desired_offset = rospy.get_param("/default_offset")
 
         self.goal = False
-        self.desired_state = 0
-        self.desired_joint = 0
-        self.desired_fault = 0
-        self.desired_time_label = 0
-        self.desired_offset = 0
-        self.desired_time = 0
+        # self.desired_state = 0
+        # self.desired_joint = 0
+        # self.desired_fault = 0
+        # self.desired_time_label = 0
+        # self.desired_offset = 0
+        # self.desired_time = 0
 
-
+        self.timer_flag = 0
         self.iter = 0
         self.state = 0
         self.iter_msg = False
+        self.rand_time_list = []     
+        self.start_timer()
+
+    def start_timer(self):
+        rng = np.random.default_rng()
+        self.rand_time = rng.choice(range(590), size=7, replace=False)
+        self.rand_time.tolist()
+        self.rand_time = np.append(self.rand_time,600)
+        self.rand_time.sort()
+        self.start_time = rospy.Time.now()
+        self.iter_callback()
 
 
 
-    def state_callback(self,state):
-        self.state = state.data
-        
 
-    def goal_callback(self,goal):   
-        self.goal = goal.data
-        #print(rand_msg.fault)
-        #print(rand_msg.joint)
-        #print(rand_msg.pose)
-        
-    def iter_callback(self,data):
-        self.iter = data.data
+    def iter_callback(self):
         self.iter_msg = True
-        self.rand_time = random.randint(1,5)
+        # sim time : 9.5 mins
+        print(self.rand_time)
+        print(self.start_time)
+        self.rand_time_val = self.rand_time[self.timer_flag]
         self.real_time_exec = rospy.Time.now()
-        self.real_time_val = rospy.Duration(self.rand_time) 
-        rospy.sleep(self.real_time_val)
+        self.real_time_val = self.start_time + rospy.Duration(self.rand_time_val)
+        print("actual_time: ", self.real_time_exec)
+        print("desired_time: ", self.real_time_val)
+        while rospy.Time.now() < self.real_time_val:
+            #print("sleeping")   
+            rospy.sleep(1)
+
         print("injecting")
+        self.timer_flag = self.timer_flag + 1
         self.timer_callback()
+           
 
         
                 
@@ -92,8 +104,8 @@ class firos_rand:
             self.desired_drop_rate = random.randint(self.min_drop_rate,self.max_drop_rate)
             self.desired_mean = random.randint(self.min_mean,self.max_mean)
             self.desired_sd = random.randint(self.min_sd,self.max_sd)
-            self.desired_time_label = random.randint(2, self.max_time_labels) #disable for real and execution time fault injection
-            #self.desired_time_label = 1
+            #self.desired_time_label = random.randint(2, self.max_time_labels) #disable for real and execution time fault injection
+            self.desired_time_label = 1
             self.desired_offset = random.randint(self.min_offset,self.max_offset)
             self.desired_time = random.randint(1, self.max_time)
 
@@ -119,8 +131,22 @@ class firos_rand:
             
             self.random_fault_publisher.publish(rand_msg)
         self.iter_msg = False
+        rospy.sleep(5)
+        print(self.timer_flag)
+        if self.timer_flag <= 6:
+            self.iter_callback()
+        if self.timer_flag == 7:
+            self.reset_flag = Bool()
+            self.reset_flag.data = True
+            self.reset_world.publish(self.reset_flag)
+            self.timer_flag = 0
+            self.start_timer()
+
+
+
+            
         
 if __name__ == '__main__':
-    rospy.init_node('random_fault_gen')
+    rospy.init_node('real_time_random_fault_gen')
     firos_rand()
     rospy.spin()

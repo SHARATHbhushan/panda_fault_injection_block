@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# license removed for brevity
 import rospy
 from std_msgs.msg import String
 from sensor_msgs.msg import JointState
@@ -64,13 +63,14 @@ class firos:
         self.fault_msg_subscriber = rospy.Subscriber("fault_msg", faultmsg, self.fault_callback)
         self.publish_time = rospy.Publisher("time_to_inject", Int32, queue_size=10)
         self.real_time_fi = rospy.Subscriber("real_time_fi", Bool, self.real_time_fi_callback)
-        
+        self.faul_msg_status_pub = rospy.Publisher("fault_flag", Bool,  queue_size=10)
         #setting up initial falgs
         self.goal = False
         self.fault_status.publish(False)
         self.package_drop_flag = False  
         self.package_drop_state = False
         self.real_time_fi_flag = False
+        self.faul_msg_status_pub.publish(False)
 
 
         #setting up initial values
@@ -82,8 +82,10 @@ class firos:
         self.proc = None
         self.joint_val_list = []
         self.fault_val_list = []
+        
 
         #getting parameters from launch file
+        self.desired_joint = 0
         self.desired_fault = rospy.get_param("/default_fault")
         self.desired_joint = rospy.get_param("/default_joint")
         self.desired_state = rospy.get_param("/default_state")
@@ -118,6 +120,7 @@ class firos:
         self.desired_sd = fault_msg.sd
         self.desired_drop_rate = fault_msg.drop_rate
         self.fault_val_list = []
+        self.desired_drop_rate = int(self.desired_drop_rate)
         #self.publish_time.publish(self.desired_time)
         self.fault_status.publish(True)
 
@@ -139,7 +142,7 @@ class firos:
         if self.desired_fault == 0:
             self.fault_val = 0
         if self.desired_fault == 1:
-            self.fault_val = np.random.normal(1,1,1)[0]
+            self.fault_val = np.random.normal(self.desired_mean,self.desired_sd,1)[0]
         if self.desired_fault == 2:
             self.fault_val_list.append(self.list_joint_data[self.joint]) #to be defined
         if self.desired_fault == 3:
@@ -149,17 +152,16 @@ class firos:
             self.fault_val = self.desired_offset
 
         if self.goal == True:
-            if self.desired_fault == 3:
-                if self.package_drop_state == False:
-                    self.package_drop_flag = True
             
             if self.state == self.desired_state:
                 #print(self.list_joint_data)
                 self.fault_status.publish(True)
+                self.faul_msg_status_pub.publish(True)
                 if self.desired_fault == 2:
                     self.list_joint_data[self.joint] = self.fault_val_list[0]
                 elif self.desired_fault == 3:
-                    self.package_drop_flag = True
+                    if self.package_drop_state == False:
+                        self.package_drop_flag = True
                 else:
                     self.list_joint_data[self.joint] = self.list_joint_data[self.joint] + self.fault_val
                 
@@ -181,6 +183,7 @@ class firos:
             else:
                 #print(self.list_joint_data)
                 self.fault_status.publish(True)
+                self.faul_msg_status_pub.publish(True)
                 if self.desired_fault == 2:
                     self.list_joint_data[self.joint] = self.fault_val_list[0]
                 elif self.desired_fault == 3:
@@ -203,6 +206,7 @@ class firos:
             self.joint_state_publisher.publish(self.joint_data)
         self.package_drop_flag == False
         self.fault_status.publish(False)
+        self.faul_msg_status_pub.publish(False)
 
     def real_time_fi_callback(self,real_time_fi):
         if real_time_fi.data == True:
@@ -216,12 +220,13 @@ class firos:
 
     def goal_flag_callback(self,goal_state):
         self.goal_state = goal_state.data
-        print(self.goal_state)
+        #print(self.goal_state)
         if self.goal_state == True:
             if self.desired_fault == 3:
                 self.fault_status.publish(True)
-                print("works")
-                self.proc = subprocess.Popen(["rosrun", "topic_tools", "drop" ,"joint_states_fake", "1", "1", "joint_states"])
+                #print("works")
+                cmd = ["rosrun", "topic_tools", "drop" ,"joint_states_fake", "1", str(self.desired_drop_rate), "joint_states"]
+                self.proc = subprocess.Popen(cmd)
         else:
             self.fault_status.publish(False)
             if self.proc:

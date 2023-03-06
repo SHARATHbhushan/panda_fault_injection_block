@@ -5,3 +5,7 @@ default_joint: 0
 default_time: 0
 default_time_label: 0
 max_time: 5
+max_joints: 8
+max_faults: 4
+max_states: 9
+max_time_labels: 3

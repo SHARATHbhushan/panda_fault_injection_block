@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # license removed for brevity
 import rospy
-from std_msgs.msg import String
+from std_msgs.msg import String, Int32
 from sensor_msgs.msg import JointState
 import numpy as np
 from std_msgs.msg import Bool
@@ -25,9 +25,11 @@ class firos:
         self.tangram_7 = []
         self.flat_back = []
         self.flat_right = []
+        self.flat_front = []
         self.i = 0
         self.goal_state_subscriber = rospy.Subscriber("/gazebo/model_states", ModelStates, self.collision_callback)
-        self.collision_pub = rospy.Publisher("/collision_model", String, queue_size=10)
+        self.collision_pub = rospy.Publisher("/collision_model", Int32, queue_size=10)
+        self.reset_collision = rospy.Subscriber("/pose_state", Int32,self.state_callback)
         self.person_state = False
         self.platform_state = False
         self.tangram_1_state = False
@@ -39,8 +41,26 @@ class firos:
         self.tangram_7_state = False
         self.flat_back_state = False
         self.flat_right_state = False
+        self.flat_front_state = False
 
-    
+    def state_callback(self, data):
+
+        self.person_state = False
+        self.platform_state = False
+        self.tangram_1_state = False
+        self.tangram_2_state = False
+        self.tangram_3_state = False
+        self.tangram_4_state = False
+        self.tangram_5_state = False
+        self.tangram_6_state = False
+        self.tangram_7_state = False
+        self.flat_back_state = False
+        self.flat_right_state = False
+        self.flat_front_state = False
+
+
+
+
     def collision_callback(self,data): 
         object_1 = data.name[1]
         object_2 = data.name[2]
@@ -53,13 +73,15 @@ class firos:
         object_9 = data.name[9]
         object_10 = data.name[10]
         object_11 = data.name[11]
+        object_12 = data.name[12]
         #object_12 = data.name[12]
         #print(object_1)
         
         self.person.append(data.pose[12].position)
         self.platform.append(data.pose[1].position)
         self.flat_back.append(data.pose[9].position)
-        self.flat_right.append(data.pose[10].position)
+        self.flat_right.append(data.pose[11].position)
+        self.flat_front.append(data.pose[10].position)
         self.tangram_1.append(data.twist[2].linear.x)
         self.tangram_2.append(data.twist[3].linear.x)
         self.tangram_3.append(data.twist[4].linear.x)
@@ -81,61 +103,101 @@ class firos:
         if abs(self.tangram_1[self.i]) > 10:
             if self.tangram_1_state == False:
                 print("tangram_1 fall detected")
-
+                msg = Int32()
+                msg.data = 1
+                self.collision_pub.publish(msg)
                 self.tangram_1_state = True
         
         if abs(self.tangram_2[self.i]) > 10:
             if self.tangram_2_state == False:
                 print("tangram_2 fall detected")
+                msg = Int32()
+                msg.data = 1
+                self.collision_pub.publish(msg)
                 self.tangram_2_state = True
         
         if abs(self.tangram_3[self.i]) > 10:
             if self.tangram_3_state == False:
                 print("tangram_3 fall detected")
+                msg = Int32()
+                msg.data = 1
+                self.collision_pub.publish(msg)
                 self.tangram_3_state = True
         
         if abs(self.tangram_4[self.i]) > 10:
             if self.tangram_4_state == False:
                 print("tangram_4 fall detected")
+                msg = Int32()
+                msg.data = 1
+                self.collision_pub.publish(msg)
                 self.tangram_4_state = True
 
         if abs(self.tangram_5[self.i]) > 10:
             if self.tangram_5_state == False:
                 print("tangram_5 fall detected")
+                msg = Int32()
+                msg.data = 1
+                self.collision_pub.publish(msg)
                 self.tangram_5_state = True
 
         if abs(self.tangram_6[self.i]) > 10:
             if self.tangram_6_state == False:
                 print("tangram_6 fall detected")
+                msg = Int32()
+                msg.data = 1
+                self.collision_pub.publish(msg)
+
                 self.tangram_6_state = True
         
         if abs(self.tangram_7[self.i]) > 10:
             if self.tangram_7_state == False:
                 print("tangram_7 fall detected")
+                msg = Int32()
+                msg.data = 1
+                self.collision_pub.publish(msg)
                 self.tangram_7_state = True
         
 
         if self.person[self.i] != self.person[self.i - 1]:
             if self.person_state == False:
                 print("human collision detected")
+                msg = Int32()
+                msg.data = 2
+                self.collision_pub.publish(msg)
                 self.person_state = True
 
         if self.platform[self.i] != self.platform[self.i - 1]:
             if self.platform_state == False:
                 print("platform collision detected")
+                msg = Int32()
+                msg.data = 3
+                self.collision_pub.publish(msg)
                 self.platform_state = True
 
  
         if self.flat_back[self.i] != self.flat_back[self.i - 1]:
             if self.flat_back_state == False:
                 print("flat_back collision detected")
+                msg = Int32()
+                msg.data = 4
+                self.collision_pub.publish(msg)
                 self.flat_back_state = True
-
 
         if self.flat_right[self.i] != self.flat_right[self.i - 1]:
             if self.flat_right_state == False:
                 print("flat_right collision detected")
+                msg = Int32()
+                msg.data = 5
+                self.collision_pub.publish(msg)
                 self.flat_right_state = True
+
+        if self.flat_front[self.i] != self.flat_front[self.i - 1]:
+            if self.flat_front_state == False:
+                print("flat_front collision detected")
+                msg = Int32()
+                msg.data = 6
+                self.collision_pub.publish(msg)
+                self.flat_front_state = True
 
 
 

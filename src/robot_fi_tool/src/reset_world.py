@@ -12,38 +12,18 @@ from std_srvs.srv import Empty
 
 class reset_world_init:
     def __init__(self):
-        self.sub = rospy.Subscriber("iterations", Int32, self.callback)
         self.wait = rospy.wait_for_service('/gazebo/reset_world')
         self.reset_world = rospy.ServiceProxy('/gazebo/reset_world', Empty)
         self.wait2 = rospy.wait_for_service('/gazebo/reset_simulation')
         self.reset_simulation = rospy.ServiceProxy('/gazebo/reset_simulation', Empty)
-        self.goal_state_subscriber = rospy.Subscriber("goal_msg", Bool, self.goal_callback)
-        self.state_subscriber = rospy.Subscriber("pose_state", Int32,self.state_callback)
-        self.goal = False
-        self.state = -1
-
-    def goal_callback(self, data):
-        self.goal = data.data
-    
-
-    def callback(self, data):
-        self.iter = data.data
+        self.reset_world_sub = rospy.Subscriber("reset_world", Bool, self.reset_callback)
 
     
-    def state_callback(self, data):
-        self.state = data.data
-        if self.state == 9:
-            rospy.sleep(5)
-            if self.iter == 6:
-                if self.goal == False:
-                    print("works")
-                    rospy.sleep(5)
-                    self.reset_world()
-                    #self.reset_simulation()
-        else:
-            pass
-
-
+    def reset_callback(self, data):  
+        print("works")
+        rospy.sleep(5)
+        self.reset_world()
+        #self.reset_simulation()
 
 
 if __name__ == '__main__':
