@@ -7,3 +7,4 @@ int32 time_label
 int32 drop_rate
 int32 mean
 int32 sd
+int32 fault_effect

@@ -5,7 +5,7 @@ from std_msgs.msg import String, Int32
 from sensor_msgs.msg import JointState
 import numpy as np
 from std_msgs.msg import Bool
-
+from robot_fi_tool.msg import faultmsg
 from gazebo_msgs.msg import ModelStates
 from gazebo_msgs.srv import GetModelState
 class firos:
@@ -30,6 +30,8 @@ class firos:
         self.goal_state_subscriber = rospy.Subscriber("/gazebo/model_states", ModelStates, self.collision_callback)
         self.collision_pub = rospy.Publisher("/collision_model", Int32, queue_size=10)
         self.reset_collision = rospy.Subscriber("/pose_state", Int32,self.state_callback)
+        self.fault_callback_sub = rospy.Subscriber("/fault_msg", faultmsg, self.fault_callback)
+        self.fault_pub = rospy.Publisher("/fault_effect", faultmsg, queue_size=10)
         self.person_state = False
         self.platform_state = False
         self.tangram_1_state = False
@@ -58,7 +60,16 @@ class firos:
         self.flat_right_state = False
         self.flat_front_state = False
 
-
+    def fault_callback(self, data):
+        self.fault = data.fault
+        self.fault_joint = data.joint
+        self.time = data.time
+        self.time_label = data.time_label
+        self.offset = data.offset
+        self.drop_rate = data.drop_rate
+        self.mean = data.mean
+        self.sd = data.sd
+        self.fault_state = data.pose
 
 
     def collision_callback(self,data): 
@@ -74,10 +85,11 @@ class firos:
         object_10 = data.name[10]
         object_11 = data.name[11]
         object_12 = data.name[12]
+        object_13 = data.name[13]
         #object_12 = data.name[12]
-        #print(object_1)
+        #print(object_13)
         
-        self.person.append(data.pose[12].position)
+        self.person.append(data.pose[13].position)
         self.platform.append(data.pose[1].position)
         self.flat_back.append(data.pose[9].position)
         self.flat_right.append(data.pose[11].position)
@@ -89,7 +101,6 @@ class firos:
         self.tangram_5.append(data.twist[6].linear.x)
         self.tangram_6.append(data.twist[7].linear.x)
         self.tangram_7.append(data.twist[8].linear.x)
-
         """  
         collision_x_2 = data.pose[2].position.x
         collision_x_3 = data.pose[3].position.x
@@ -106,6 +117,18 @@ class firos:
                 msg = Int32()
                 msg.data = 1
                 self.collision_pub.publish(msg)
+                fault_msg = faultmsg()
+                fault_msg.fault = self.fault
+                fault_msg.joint = self.fault_joint
+                fault_msg.time = self.time
+                fault_msg.time_label = self.time_label
+                fault_msg.offset = self.offset
+                fault_msg.drop_rate = self.drop_rate
+                fault_msg.mean = self.mean
+                fault_msg.sd = self.sd
+                fault_msg.pose = self.fault_state
+                fault_msg.fault_effect = 1
+                self.fault_pub.publish(fault_msg)
                 self.tangram_1_state = True
         
         if abs(self.tangram_2[self.i]) > 10:
@@ -114,6 +137,18 @@ class firos:
                 msg = Int32()
                 msg.data = 1
                 self.collision_pub.publish(msg)
+                fault_msg = faultmsg()
+                fault_msg.fault = self.fault
+                fault_msg.joint = self.fault_joint
+                fault_msg.time = self.time
+                fault_msg.time_label = self.time_label
+                fault_msg.offset = self.offset
+                fault_msg.drop_rate = self.drop_rate
+                fault_msg.mean = self.mean
+                fault_msg.sd = self.sd
+                fault_msg.pose = self.fault_state
+                fault_msg.fault_effect = 1
+                self.fault_pub.publish(fault_msg)
                 self.tangram_2_state = True
         
         if abs(self.tangram_3[self.i]) > 10:
@@ -122,6 +157,18 @@ class firos:
                 msg = Int32()
                 msg.data = 1
                 self.collision_pub.publish(msg)
+                fault_msg = faultmsg()
+                fault_msg.fault = self.fault
+                fault_msg.joint = self.fault_joint
+                fault_msg.time = self.time
+                fault_msg.time_label = self.time_label
+                fault_msg.offset = self.offset
+                fault_msg.drop_rate = self.drop_rate
+                fault_msg.mean = self.mean
+                fault_msg.sd = self.sd
+                fault_msg.pose = self.fault_state
+                fault_msg.fault_effect = 1
+                self.fault_pub.publish(fault_msg)
                 self.tangram_3_state = True
         
         if abs(self.tangram_4[self.i]) > 10:
@@ -130,6 +177,18 @@ class firos:
                 msg = Int32()
                 msg.data = 1
                 self.collision_pub.publish(msg)
+                fault_msg = faultmsg()
+                fault_msg.fault = self.fault
+                fault_msg.joint = self.fault_joint
+                fault_msg.time = self.time
+                fault_msg.time_label = self.time_label
+                fault_msg.offset = self.offset
+                fault_msg.drop_rate = self.drop_rate
+                fault_msg.mean = self.mean
+                fault_msg.sd = self.sd
+                fault_msg.pose = self.fault_state
+                fault_msg.fault_effect = 1
+                self.fault_pub.publish(fault_msg)
                 self.tangram_4_state = True
 
         if abs(self.tangram_5[self.i]) > 10:
@@ -138,6 +197,18 @@ class firos:
                 msg = Int32()
                 msg.data = 1
                 self.collision_pub.publish(msg)
+                fault_msg = faultmsg()
+                fault_msg.fault = self.fault
+                fault_msg.joint = self.fault_joint
+                fault_msg.time = self.time
+                fault_msg.time_label = self.time_label
+                fault_msg.offset = self.offset
+                fault_msg.drop_rate = self.drop_rate
+                fault_msg.mean = self.mean
+                fault_msg.sd = self.sd
+                fault_msg.pose = self.fault_state
+                fault_msg.fault_effect = 1
+                self.fault_pub.publish(fault_msg)
                 self.tangram_5_state = True
 
         if abs(self.tangram_6[self.i]) > 10:
@@ -146,7 +217,18 @@ class firos:
                 msg = Int32()
                 msg.data = 1
                 self.collision_pub.publish(msg)
-
+                fault_msg = faultmsg()
+                fault_msg.fault = self.fault
+                fault_msg.joint = self.fault_joint
+                fault_msg.time = self.time
+                fault_msg.time_label = self.time_label
+                fault_msg.offset = self.offset
+                fault_msg.drop_rate = self.drop_rate
+                fault_msg.mean = self.mean
+                fault_msg.sd = self.sd
+                fault_msg.pose = self.fault_state
+                fault_msg.fault_effect = 1
+                self.fault_pub.publish(fault_msg)
                 self.tangram_6_state = True
         
         if abs(self.tangram_7[self.i]) > 10:
@@ -155,23 +237,62 @@ class firos:
                 msg = Int32()
                 msg.data = 1
                 self.collision_pub.publish(msg)
+                fault_msg = faultmsg()
+                fault_msg.fault = self.fault
+                fault_msg.joint = self.fault_joint
+                fault_msg.time = self.time
+                fault_msg.time_label = self.time_label
+                fault_msg.offset = self.offset
+                fault_msg.drop_rate = self.drop_rate
+                fault_msg.mean = self.mean
+                fault_msg.sd = self.sd
+                fault_msg.pose = self.fault_state
+                fault_msg.fault_effect = 1
+                self.fault_pub.publish(fault_msg)
                 self.tangram_7_state = True
         
-
+        delta_x = self.person[self.i].x - self.person[self.i - 1].x
+        delta_y = self.person[self.i].y - self.person[self.i - 1].y
+        #print("delta: ",delta_x,delta_y)
+        
         if self.person[self.i] != self.person[self.i - 1]:
             if self.person_state == False:
                 print("human collision detected")
                 msg = Int32()
                 msg.data = 2
                 self.collision_pub.publish(msg)
+                fault_msg = faultmsg()
+                fault_msg.fault = self.fault
+                fault_msg.joint = self.fault_joint
+                fault_msg.time = self.time
+                fault_msg.time_label = self.time_label
+                fault_msg.offset = self.offset
+                fault_msg.drop_rate = self.drop_rate
+                fault_msg.mean = self.mean
+                fault_msg.sd = self.sd
+                fault_msg.pose = self.fault_state
+                fault_msg.fault_effect = 2
+                self.fault_pub.publish(fault_msg)
                 self.person_state = True
-
+        
         if self.platform[self.i] != self.platform[self.i - 1]:
             if self.platform_state == False:
                 print("platform collision detected")
                 msg = Int32()
                 msg.data = 3
                 self.collision_pub.publish(msg)
+                fault_msg = faultmsg()
+                fault_msg.fault = self.fault
+                fault_msg.joint = self.fault_joint
+                fault_msg.time = self.time
+                fault_msg.time_label = self.time_label
+                fault_msg.offset = self.offset
+                fault_msg.drop_rate = self.drop_rate
+                fault_msg.mean = self.mean
+                fault_msg.sd = self.sd
+                fault_msg.pose = self.fault_state
+                fault_msg.fault_effect = 3
+                self.fault_pub.publish(fault_msg)
                 self.platform_state = True
 
  
@@ -181,6 +302,18 @@ class firos:
                 msg = Int32()
                 msg.data = 4
                 self.collision_pub.publish(msg)
+                fault_msg = faultmsg()
+                fault_msg.fault = self.fault
+                fault_msg.joint = self.fault_joint
+                fault_msg.time = self.time
+                fault_msg.time_label = self.time_label
+                fault_msg.offset = self.offset
+                fault_msg.drop_rate = self.drop_rate
+                fault_msg.mean = self.mean
+                fault_msg.sd = self.sd
+                fault_msg.pose = self.fault_state
+                fault_msg.fault_effect = 4
+                self.fault_pub.publish(fault_msg)
                 self.flat_back_state = True
 
         if self.flat_right[self.i] != self.flat_right[self.i - 1]:
@@ -189,6 +322,18 @@ class firos:
                 msg = Int32()
                 msg.data = 5
                 self.collision_pub.publish(msg)
+                fault_msg = faultmsg()
+                fault_msg.fault = self.fault
+                fault_msg.joint = self.fault_joint
+                fault_msg.time = self.time
+                fault_msg.time_label = self.time_label
+                fault_msg.offset = self.offset
+                fault_msg.drop_rate = self.drop_rate
+                fault_msg.mean = self.mean
+                fault_msg.sd = self.sd
+                fault_msg.pose = self.fault_state
+                fault_msg.fault_effect = 5
+                self.fault_pub.publish(fault_msg)
                 self.flat_right_state = True
 
         if self.flat_front[self.i] != self.flat_front[self.i - 1]:
@@ -197,6 +342,18 @@ class firos:
                 msg = Int32()
                 msg.data = 6
                 self.collision_pub.publish(msg)
+                fault_msg = faultmsg()
+                fault_msg.fault = self.fault
+                fault_msg.joint = self.fault_joint
+                fault_msg.time = self.time
+                fault_msg.time_label = self.time_label
+                fault_msg.offset = self.offset
+                fault_msg.drop_rate = self.drop_rate
+                fault_msg.mean = self.mean
+                fault_msg.sd = self.sd
+                fault_msg.pose = self.fault_state
+                fault_msg.fault_effect = 6
+                self.fault_pub.publish(fault_msg)
                 self.flat_front_state = True
 
 

@@ -65,7 +65,7 @@ class Ui_Test_window(object):
         self.label_3.setGeometry(QtCore.QRect(20, 230, 81, 16))
         self.label_3.setObjectName("label_3")
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(130, 520, 89, 25))
+        self.pushButton.setGeometry(QtCore.QRect(120, 620, 89, 25))
         self.pushButton.setObjectName("pushButton")
         self.pushButton.clicked.connect(self.publish_fault)
         self.comboBox_3 = QtWidgets.QComboBox(self.centralwidget)
@@ -149,10 +149,31 @@ class Ui_Test_window(object):
         self.label_11 = QtWidgets.QLabel(self.centralwidget)
         self.label_11.setGeometry(QtCore.QRect(20, 370, 81, 20))
         self.label_11.setObjectName("label_11")
+        self.label_12 = QtWidgets.QLabel(self.centralwidget)
+        self.label_12.setGeometry(QtCore.QRect(20, 490, 67, 17))
+        self.label_12.setObjectName("label_12")
+        self.label_13 = QtWidgets.QLabel(self.centralwidget)
+        self.label_13.setGeometry(QtCore.QRect(20, 530, 67, 17))
+        self.label_13.setObjectName("label_13")
+        self.label_14 = QtWidgets.QLabel(self.centralwidget)
+        self.label_14.setGeometry(QtCore.QRect(20, 560, 81, 17))
+        self.label_14.setObjectName("label_14")
+        self.doubleSpinBox = QtWidgets.QSpinBox(self.centralwidget)
+        self.doubleSpinBox.setGeometry(QtCore.QRect(110, 490, 69, 26))
+        self.doubleSpinBox.setObjectName("doubleSpinBox")
+        self.doubleSpinBox_2 = QtWidgets.QSpinBox(self.centralwidget)
+        self.doubleSpinBox_2.setGeometry(QtCore.QRect(110, 520, 69, 26))
+        self.doubleSpinBox_2.setObjectName("doubleSpinBox_2")
+        self.spinBox_2 = QtWidgets.QSpinBox(self.centralwidget)
+        self.spinBox_2.setGeometry(QtCore.QRect(120, 560, 48, 26))
+        self.spinBox_2.setObjectName("spinBox_2")
         Test_window.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(Test_window)
         self.statusbar.setObjectName("statusbar")
         Test_window.setStatusBar(self.statusbar)
+
+
+        
 
 
 
@@ -183,6 +204,12 @@ class Ui_Test_window(object):
         self.comboBox_4.addItems(self.time_label_list)
         self.comboBox_4.activated[str].connect(self.select_time_label)  
         self.spinBox.valueChanged.connect(self.set_time)
+        self.spinBox_2.valueChanged.connect(self.set_drop_rate)
+        self.doubleSpinBox.valueChanged.connect(self.set_mean)
+        self.doubleSpinBox_2.valueChanged.connect(self.set_sd)
+        self.label_12.setText(_translate("Test_window", "Mean"))
+        self.label_13.setText(_translate("Test_window", "SD"))
+        self.label_14.setText(_translate("Test_window", "Drop Rate"))
         image_path = "/home/acefly/Pictures/panda_2.jpg"
         if os.path.isfile(image_path):
                 scene = QtWidgets.QGraphicsScene()
@@ -217,6 +244,19 @@ class Ui_Test_window(object):
         self.time_val = self.spinBox.value()
         print("time: ", self.time_val)
 
+    def set_drop_rate(self):
+        self.drop_rate_val = self.spinBox_2.value()
+        print("drop rate: ", self.drop_rate_val)
+
+    def set_mean(self):
+        self.mean_val = self.doubleSpinBox.value()
+        print("mean : ", self.mean_val)
+
+    def set_sd(self):
+        self.sd_val = self.doubleSpinBox_2.value()
+        print("sd : ", self.sd_val)
+
+
     def publish_fault(self):
         print("clicked")
         msg = faultmsg() 
@@ -226,6 +266,9 @@ class Ui_Test_window(object):
         msg.offset = int(self.offset)
         msg.time = int(self.time_val)
         msg.time_label = int(self.time_label_val)
+        msg.mean = float(self.mean_val)
+        msg.sd = float(self.sd_val)
+        msg.drop_rate = int(self.drop_rate_val)
         self.fault_publisher.publish(msg)
         
 

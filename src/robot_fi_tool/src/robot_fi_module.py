@@ -172,7 +172,7 @@ class firos:
                 #self.joint_data.position[1] = error_data
                 #self.joint_state_publisher.publish(self.joint_data)
                 #self.joint_state_publisher.publish(data)
-                self.goal = False
+                #self.goal = False
         #print(self.joint_data)
 
         if self.real_time_fi_flag == True:
@@ -222,11 +222,12 @@ class firos:
         self.goal_state = goal_state.data
         #print(self.goal_state)
         if self.goal_state == True:
-            if self.desired_fault == 3:
-                self.fault_status.publish(True)
-                #print("works")
-                cmd = ["rosrun", "topic_tools", "drop" ,"joint_states_fake", "1", str(self.desired_drop_rate), "joint_states"]
-                self.proc = subprocess.Popen(cmd)
+            if self.state == self.desired_state:
+                if self.desired_fault == 3:
+                    self.fault_status.publish(True)
+                    #print("works")
+                    cmd = ["rosrun", "topic_tools", "drop" ,"joint_states_fake", "1", str(self.desired_drop_rate), "joint_states"]
+                    self.proc = subprocess.Popen(cmd)
         else:
             self.fault_status.publish(False)
             if self.proc:
