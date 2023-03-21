@@ -24,6 +24,7 @@ class goal_listener:
         self.exec_time_exec = 0
         self.exec_time_val = 0
         self.exec_endTime = 0
+        
 
     def fault_callback(self,data):
         self.desired_time_label = data.time_label

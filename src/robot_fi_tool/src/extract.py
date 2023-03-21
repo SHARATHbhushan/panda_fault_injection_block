@@ -68,7 +68,7 @@ collision_dataframe = collision_dataframe.drop('index', axis=1)
 collision_dataframe.to_csv("/home/acefly/robot_fib/data_v2/check_collision/check_collision.csv")
 
 
-###
+'''
 
 
 faults_dataframe = pd.DataFrame()
@@ -86,11 +86,11 @@ faults_dataframe.insert( 0, column="time_stamp",value = p)
 
 faults_dataframe = faults_dataframe.reset_index()
 faults_dataframe = faults_dataframe.drop('index', axis=1)
-faults_dataframe.to_csv("/home/acefly/robot_fib/data_v2/faults/faults.csv")
-
-###
+faults_dataframe.to_csv("/home/acefly/robot_fib/data_v3/faults/faults.csv")
 
 
+
+'''
 fault_flag_dataframe = pd.DataFrame()
 
 for i in range(0, len(fault_flag_list)):
@@ -106,11 +106,13 @@ fault_flag_dataframe.insert( 0, column="time_stamp",value = p)
 
 fault_flag_dataframe = fault_flag_dataframe.reset_index()
 fault_flag_dataframe = fault_flag_dataframe.drop('index', axis=1)
-fault_flag_dataframe.to_csv("/home/acefly/robot_fib/data_v2/fault_flag/fault_flag.csv")
+fault_flag_dataframe.to_csv("/home/acefly/robot_fib/data_v3/fault_flag/fault_flag.csv")
 
-
+'''
 
 ###
+
+'''
 print(faulty_robot_states_list)
 
 robot_states_dataframe = pd.DataFrame()
@@ -134,11 +136,11 @@ robot_states_dataframe.to_csv("/home/acefly/robot_fib/data_v2/faulty_robot_state
 
 print(robot_states_dataframe)
 
-
-
-###
 '''
 
+###
+
+'''
 fault_effect_dataframe = pd.DataFrame()
 
 for i in range(0, len(fault_effect_list)):
@@ -161,10 +163,16 @@ fault_effect_dataframe.to_csv("/home/acefly/robot_fib/data_v3/fault_effect/fault
 val = fault_effect_dataframe.columns[[1,2,3,4,5,6,7,8,9,10]]
 print(val)
 fault_effect_dataframe.drop_duplicates(subset=fault_effect_dataframe.columns[[1,2,3,4,5,6,7,8,9,10]], keep=False, inplace=True)
+
+fault_effect_dataframe["fault_effect"] = fault_effect_dataframe["fault_effect"].replace(to_replace=4,value=3)
+fault_effect_dataframe["fault_effect"] = fault_effect_dataframe["fault_effect"].replace(to_replace=5,value=4)
+fault_effect_dataframe["fault_effect"] = fault_effect_dataframe["fault_effect"].replace(to_replace=6,value=5)
+fault_effect_dataframe["fault_effect"] = fault_effect_dataframe["fault_effect"].replace(to_replace=7,value=6)
+
 fault_effect_dataframe.to_csv("/home/acefly/robot_fib/data_v3/fault_effect/fault_effect_no_repetation.csv")
 print(fault_effect_dataframe)
 
-
+'''
 
 
 

@@ -8,6 +8,15 @@ import matplotlib.pyplot as plt
 
 
 df = pd.read_csv("/home/acefly/robot_fib/data_v3/fault_effect/fault_effect_no_repetation.csv")
+fault_effects = len(df.index)
+df_faults = pd.read_csv("/home/acefly/robot_fib/data_v3/faults/faults.csv")
+faults = len(df_faults.index)
+
+fault_coverage = fault_effects/faults
+
+with open ('/home/acefly/robot_fib/Tables/fault_coverage.txt', 'w') as file:  
+    file.write(str(fault_coverage))  
+
 
 df = df[['fault', 'time_label', 'fault_effect']]
 
@@ -99,11 +108,11 @@ print(df_final)
 df_final.to_csv("/home/acefly/robot_fib/Tables/fault_effects_during_planning.csv", index=False, header=True)
 
 
-fig = go.Figure(data=[go.Surface(z=df_final_to_plot["Counts"], x=df_final_to_plot["fault"], y=df_final_to_plot["fault_effect"])])
+# fig = go.Figure(data=[go.Surface(z=df_final_to_plot["Counts"], x=df_final_to_plot["fault"], y=df_final_to_plot["fault_effect"])])
 
-fig.update_layout(title='Fault_space')
+# fig.update_layout(title='Fault_space')
 
-fig.show()
+# fig.show()
 #plotly.offline.plot(fig, filename='/home/acefly/robot_fib/plots/Scatter3d.html')
 
 
