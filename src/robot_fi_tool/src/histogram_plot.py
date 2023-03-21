@@ -29,7 +29,8 @@ plotly.offline.plot(fig3, filename='/home/acefly/robot_fib/plots/fault_and_fault
 fig4 = px.density_heatmap(df, x="fault", y="fault_effect",
        title="Density Map of fault and fault_effect based on time label", 
        facet_col="time_label")
-fig4.show()
+plotly.offline.plot(fig4, filename='/home/acefly/robot_fib/plots/fault_and_fault_effect_based_on_time_label.html')
+
 
 fig5 = go.Figure(go.Histogram2d(
         x=df["fault"],
@@ -37,4 +38,4 @@ fig5 = go.Figure(go.Histogram2d(
         texttemplate= "%{z}"
     ))
 
-fig5.show()
+plotly.offline.plot(fig5, filename='/home/acefly/robot_fib/plots/fault_and_fault_effect_histogram2d.html')
