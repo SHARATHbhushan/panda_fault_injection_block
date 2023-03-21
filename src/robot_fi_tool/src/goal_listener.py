@@ -16,7 +16,7 @@ class goal_listener:
         self.desired_time_label = -1
         self.desired_time = 0
         self.real_time_exec = 0
-        self.real_time_val = 0
+        self.real_time_val_s = 0
         self.real_endTime = 0
         self.plan_time_exec = 0
         self.plan_time_val = 0
@@ -56,21 +56,19 @@ class goal_listener:
             self.flag = False
         if data.data == True:
             self.flag = True
-        self.real_time_exec = rospy.Time.now()
-        self.real_time_val = rospy.Duration(self.desired_time) 
-        self.real_endTime = self.real_time_exec + self.real_time_val
-        self.plan_time_exec = rospy.Time.now()
-        self.plan_time_val = rospy.Duration(5 - self.desired_time)
-        self.plan_endTime = self.plan_time_exec + self.plan_time_val
-        self.exec_time_exec = rospy.Time.now()
-        self.exec_time_val = rospy.Duration(5)
-        self.exec_endTime = self.exec_time_exec + self.exec_time_val
+        self.real_time_exec_s = rospy.Time.now()
+        self.real_time_val_s = rospy.Duration(self.desired_time) 
+        self.real_endTime = self.real_time_exec_s + self.real_time_val_s
+        self.plan_time_exec_s = rospy.Time.now()
+        self.plan_time_val_s = rospy.Duration(5 - self.desired_time)
+        self.plan_endTime = self.plan_time_exec_s + self.plan_time_val_s
+
         #self.publisher(data.data,self.flag)
-
-
+        
 
         #def publisher(self,data):
         self.goal_msg = Bool()
+        self.goal_msg_val = Bool()
         if data:    
             if self.flag == True:
                 #print(True)
@@ -86,37 +84,40 @@ class goal_listener:
                         self.pub.publish(self.goal_msg)
                         rospy.sleep(0.1)
                     time_offset = rospy.Time.now()
-                    planning_offset = rospy.Duration(1)
-                    self.goal_state = True
-                    self.pub2.publish(self.goal_state)
-                    while rospy.Time.now() < self.real_time_val+time_offset+planning_offset:
+                    planning_offset = rospy.Duration(0.5)
+                    self.goal_msg_val = True
+                    self.pub2.publish(self.goal_msg_val)
+                    while rospy.Time.now() < self.real_time_val_s+time_offset+planning_offset:
                         #print("state 2.2")
                         self.goal_msg.data = True
                         self.pub.publish(self.goal_msg)
                         rospy.sleep(0.1)
-                    self.goal_state = False
-                    self.pub2.publish(self.goal_state)
+                    self.goal_msg_val = False
+                    self.pub2.publish(self.goal_msg_val)
                 self.goal_msg.data = False
                 self.pub.publish(self.goal_msg)
                 self.flag = False
-                
+
                 if self.desired_time_label == 3:
                     #print("state 3")
+                    self.exec_time_exec = rospy.Time.now()
+                    self.exec_time_val = rospy.Duration(5)
+                    self.exec_endTime = self.exec_time_exec + self.exec_time_val
                     while rospy.Time.now() < self.exec_endTime:
                         #print("state 3.1")
                         self.goal_msg.data = False
                         self.pub.publish(self.goal_msg)
                         rospy.sleep(0.1)
                     time_offset = rospy.Time.now()
-                    self.goal_state = True
-                    self.pub2.publish(self.goal_state)
-                    while rospy.Time.now() < self.real_time_val+time_offset:
+                    self.goal_msg_val = True
+                    self.pub2.publish(self.goal_msg_val)
+                    while rospy.Time.now() < self.real_time_val_s+time_offset:
                         #print("state 3.2")
                         self.goal_msg.data = True
                         self.pub.publish(self.goal_msg)
                         rospy.sleep(0.1)
-                    self.goal_state = False
-                    self.pub2.publish(self.goal_state)
+                    self.goal_msg_val = False
+                    self.pub2.publish(self.goal_msg_val)
                 self.goal_msg.data = False
                 self.pub.publish(self.goal_msg)
                 self.flag = False

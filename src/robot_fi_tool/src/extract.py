@@ -11,7 +11,7 @@ from rosbags.highlevel import AnyReader
 
 from pathlib import Path
 
-folder = "/home/acefly/robot_fib/data_v2/"
+folder = "/home/acefly/robot_fib/data_v3/"
 
 
 
@@ -157,11 +157,11 @@ fault_effect_dataframe.insert( 0, column="time_stamp",value = p)
 
 fault_effect_dataframe = fault_effect_dataframe.reset_index()
 fault_effect_dataframe = fault_effect_dataframe.drop('index', axis=1)
-fault_effect_dataframe.to_csv("/home/acefly/robot_fib/data_v2/fault_effect/fault_effect.csv")
+fault_effect_dataframe.to_csv("/home/acefly/robot_fib/data_v3/fault_effect/fault_effect.csv")
 val = fault_effect_dataframe.columns[[1,2,3,4,5,6,7,8,9,10]]
 print(val)
 fault_effect_dataframe.drop_duplicates(subset=fault_effect_dataframe.columns[[1,2,3,4,5,6,7,8,9,10]], keep=False, inplace=True)
-fault_effect_dataframe.to_csv("/home/acefly/robot_fib/data_v2/fault_effect/fault_effect_no_repetation.csv")
+fault_effect_dataframe.to_csv("/home/acefly/robot_fib/data_v3/fault_effect/fault_effect_no_repetation.csv")
 print(fault_effect_dataframe)
 
 

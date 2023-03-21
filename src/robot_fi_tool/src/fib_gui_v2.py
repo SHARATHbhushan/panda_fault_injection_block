@@ -42,6 +42,10 @@ class Ui_Test_window(object):
         self.state_val = 0
         self.joint_val = 0
         self.fault_val = 0
+        self.mean_val = 0
+        self.sd_val = 0
+        self.drop_rate_val = 0    
+        
 
 
     def setupUi(self, Test_window):
@@ -77,10 +81,10 @@ class Ui_Test_window(object):
         self.label_4 = QtWidgets.QLabel(self.centralwidget)
         self.label_4.setGeometry(QtCore.QRect(30, 320, 91, 21))
         self.label_4.setObjectName("label_4")
-        self.progressBar = QtWidgets.QProgressBar(self.centralwidget)
-        self.progressBar.setGeometry(QtCore.QRect(120, 620, 118, 23))
-        self.progressBar.setProperty("value", 0)
-        self.progressBar.setObjectName("progressBar")
+        #self.progressBar = QtWidgets.QProgressBar(self.centralwidget)
+        #self.progressBar.setGeometry(QtCore.QRect(120, 620, 118, 23))
+        #self.progressBar.setProperty("value", 0)
+        #self.progressBar.setObjectName("progressBar")
         self.horizontalSlider = QtWidgets.QSlider(self.centralwidget)
         self.horizontalSlider.setGeometry(QtCore.QRect(140, 320, 160, 16))
         self.horizontalSlider.setOrientation(QtCore.Qt.Horizontal)
@@ -266,8 +270,8 @@ class Ui_Test_window(object):
         msg.offset = int(self.offset)
         msg.time = int(self.time_val)
         msg.time_label = int(self.time_label_val)
-        msg.mean = float(self.mean_val)
-        msg.sd = float(self.sd_val)
+        msg.mean = int(self.mean_val)
+        msg.sd = int(self.sd_val)
         msg.drop_rate = int(self.drop_rate_val)
         self.fault_publisher.publish(msg)
         

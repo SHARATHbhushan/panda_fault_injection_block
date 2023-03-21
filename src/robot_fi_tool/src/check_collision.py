@@ -16,13 +16,27 @@ class firos:
         #print(noise)
         self.person = []
         self.platform = []
-        self.tangram_1 = []
-        self.tangram_2 = []
-        self.tangram_3 = []
-        self.tangram_4 = []
-        self.tangram_5 = []
-        self.tangram_6 = []
-        self.tangram_7 = []
+        self.tangram_1_x = []
+        self.tangram_2_x = []
+        self.tangram_3_x = []
+        self.tangram_4_x = []
+        self.tangram_5_x = []
+        self.tangram_6_x = []
+        self.tangram_7_x = []
+        self.tangram_1_y = []
+        self.tangram_2_y = []
+        self.tangram_3_y = []
+        self.tangram_4_y = []
+        self.tangram_5_y = []
+        self.tangram_6_y = []
+        self.tangram_7_y = []
+        self.tangram_1_z = []
+        self.tangram_2_z = []
+        self.tangram_3_z = []
+        self.tangram_4_z = []
+        self.tangram_5_z = []
+        self.tangram_6_z = []
+        self.tangram_7_z = []
         self.flat_back = []
         self.flat_right = []
         self.flat_front = []
@@ -32,6 +46,7 @@ class firos:
         self.reset_collision = rospy.Subscriber("/pose_state", Int32,self.state_callback)
         self.fault_callback_sub = rospy.Subscriber("/fault_msg", faultmsg, self.fault_callback)
         self.fault_pub = rospy.Publisher("/fault_effect", faultmsg, queue_size=10)
+        
         self.person_state = False
         self.platform_state = False
         self.tangram_1_state = False
@@ -44,6 +59,17 @@ class firos:
         self.flat_back_state = False
         self.flat_right_state = False
         self.flat_front_state = False
+        self.fault = 0
+        self.fault_joint = 0
+        self.time = 0
+        self.time_label = 0
+        self.offset = 0
+        self.drop_rate = 0
+        self.mean = 0
+        self.sd = 0
+        self.fault_state = 0
+        self.fault_effect = 0
+        self.exponent = 1000
 
     def state_callback(self, data):
 
@@ -94,13 +120,28 @@ class firos:
         self.flat_back.append(data.pose[9].position)
         self.flat_right.append(data.pose[11].position)
         self.flat_front.append(data.pose[10].position)
-        self.tangram_1.append(data.twist[2].linear.x)
-        self.tangram_2.append(data.twist[3].linear.x)
-        self.tangram_3.append(data.twist[4].linear.x)
-        self.tangram_4.append(data.twist[5].linear.x)
-        self.tangram_5.append(data.twist[6].linear.x)
-        self.tangram_6.append(data.twist[7].linear.x)
-        self.tangram_7.append(data.twist[8].linear.x)
+        self.tangram_1_x.append(data.twist[2].linear.x)
+        self.tangram_2_x.append(data.twist[3].linear.x)
+        self.tangram_3_x.append(data.twist[4].linear.x)
+        self.tangram_4_x.append(data.twist[5].linear.x)
+        self.tangram_5_x.append(data.twist[6].linear.x)
+        self.tangram_6_x.append(data.twist[7].linear.x)
+        self.tangram_7_x.append(data.twist[8].linear.x)
+        self.tangram_1_y.append(data.twist[2].linear.y)
+        self.tangram_2_y.append(data.twist[3].linear.y)
+        self.tangram_3_y.append(data.twist[4].linear.y)
+        self.tangram_4_y.append(data.twist[5].linear.y)
+        self.tangram_5_y.append(data.twist[6].linear.y)
+        self.tangram_6_y.append(data.twist[7].linear.y)
+        self.tangram_7_y.append(data.twist[8].linear.y)
+        self.tangram_1_z.append(data.twist[2].linear.z)
+        self.tangram_2_z.append(data.twist[3].linear.z)
+        self.tangram_3_z.append(data.twist[4].linear.z)
+        self.tangram_4_z.append(data.twist[5].linear.z)
+        self.tangram_5_z.append(data.twist[6].linear.z)
+        self.tangram_6_z.append(data.twist[7].linear.z)
+        self.tangram_7_z.append(data.twist[8].linear.z)
+
         """  
         collision_x_2 = data.pose[2].position.x
         collision_x_3 = data.pose[3].position.x
@@ -111,9 +152,11 @@ class firos:
         collision_x_8 = data.pose[8].position.x
         collision_X_9 = data.pose[9].position.x 
         """
-        if abs(self.tangram_1[self.i]) > 10:
+        self.exponent = 1000
+        #print(float(self.tangram_1_y[self.i])*self.exponent)
+        if abs(float(self.tangram_1_x[self.i])*self.exponent) > 300 or abs(float(self.tangram_1_y[self.i])*self.exponent) > 300 or abs(float(self.tangram_1_z[self.i])*self.exponent) > 300:
             if self.tangram_1_state == False:
-                print("tangram_1 fall detected")
+                print("tangram_1_x fall detected")
                 msg = Int32()
                 msg.data = 1
                 self.collision_pub.publish(msg)
@@ -131,9 +174,9 @@ class firos:
                 self.fault_pub.publish(fault_msg)
                 self.tangram_1_state = True
         
-        if abs(self.tangram_2[self.i]) > 10:
+        if abs(float(self.tangram_2_x[self.i])*self.exponent) > 300 or abs(float(self.tangram_2_y[self.i])*self.exponent) > 300 or abs(float(self.tangram_2_z[self.i])*self.exponent) > 300:
             if self.tangram_2_state == False:
-                print("tangram_2 fall detected")
+                print("tangram_2_x fall detected")
                 msg = Int32()
                 msg.data = 1
                 self.collision_pub.publish(msg)
@@ -151,9 +194,9 @@ class firos:
                 self.fault_pub.publish(fault_msg)
                 self.tangram_2_state = True
         
-        if abs(self.tangram_3[self.i]) > 10:
+        if abs(float(self.tangram_3_x[self.i])*self.exponent) > 300 or abs(float(self.tangram_3_y[self.i])*self.exponent) > 300 or abs(float(self.tangram_3_z[self.i])*self.exponent) > 300:
             if self.tangram_3_state == False:
-                print("tangram_3 fall detected")
+                print("tangram_3_x fall detected")
                 msg = Int32()
                 msg.data = 1
                 self.collision_pub.publish(msg)
@@ -171,9 +214,9 @@ class firos:
                 self.fault_pub.publish(fault_msg)
                 self.tangram_3_state = True
         
-        if abs(self.tangram_4[self.i]) > 10:
+        if abs(float(self.tangram_4_x[self.i])*self.exponent) > 300 or abs(float(self.tangram_4_y[self.i])*self.exponent) > 300 or abs(float(self.tangram_4_z[self.i])*self.exponent) > 300:
             if self.tangram_4_state == False:
-                print("tangram_4 fall detected")
+                print("tangram_4_x fall detected")
                 msg = Int32()
                 msg.data = 1
                 self.collision_pub.publish(msg)
@@ -191,9 +234,9 @@ class firos:
                 self.fault_pub.publish(fault_msg)
                 self.tangram_4_state = True
 
-        if abs(self.tangram_5[self.i]) > 10:
+        if abs(float(self.tangram_5_x[self.i])*self.exponent) > 300 or abs(float(self.tangram_5_y[self.i])*self.exponent) > 300 or abs(float(self.tangram_5_z[self.i])*self.exponent) > 300:
             if self.tangram_5_state == False:
-                print("tangram_5 fall detected")
+                print("tangram_5_x fall detected")
                 msg = Int32()
                 msg.data = 1
                 self.collision_pub.publish(msg)
@@ -211,9 +254,9 @@ class firos:
                 self.fault_pub.publish(fault_msg)
                 self.tangram_5_state = True
 
-        if abs(self.tangram_6[self.i]) > 10:
+        if abs(float(self.tangram_6_x[self.i])*self.exponent) > 300 or abs(float(self.tangram_6_y[self.i])*self.exponent) > 300 or abs(float(self.tangram_6_z[self.i])*self.exponent) > 300:
             if self.tangram_6_state == False:
-                print("tangram_6 fall detected")
+                print("tangram_6_x fall detected")
                 msg = Int32()
                 msg.data = 1
                 self.collision_pub.publish(msg)
@@ -231,9 +274,9 @@ class firos:
                 self.fault_pub.publish(fault_msg)
                 self.tangram_6_state = True
         
-        if abs(self.tangram_7[self.i]) > 10:
+        if abs(float(self.tangram_7_x[self.i])*self.exponent) > 300 or abs(float(self.tangram_7_y[self.i])*self.exponent) > 300 or abs(float(self.tangram_7_z[self.i])*self.exponent) > 300:
             if self.tangram_7_state == False:
-                print("tangram_7 fall detected")
+                print("tangram_7_x fall detected")
                 msg = Int32()
                 msg.data = 1
                 self.collision_pub.publish(msg)
@@ -251,8 +294,8 @@ class firos:
                 self.fault_pub.publish(fault_msg)
                 self.tangram_7_state = True
         
-        delta_x = self.person[self.i].x - self.person[self.i - 1].x
-        delta_y = self.person[self.i].y - self.person[self.i - 1].y
+        #delta_x = self.person[self.i].x - self.person[self.i - 1].x
+        #delta_y = self.person[self.i].y - self.person[self.i - 1].y
         #print("delta: ",delta_x,delta_y)
         
         if self.person[self.i] != self.person[self.i - 1]:

@@ -64,6 +64,8 @@ class firos:
         self.publish_time = rospy.Publisher("time_to_inject", Int32, queue_size=10)
         self.real_time_fi = rospy.Subscriber("real_time_fi", Bool, self.real_time_fi_callback)
         self.faul_msg_status_pub = rospy.Publisher("fault_flag", Bool,  queue_size=10)
+        self.fault_flag_pub = rospy.Publisher("goal_flag", Bool, queue_size=10)
+        self.planning_subscription = rospy.Subscriber("planning", Bool, self.planning_callback)
         #setting up initial falgs
         self.goal = False
         self.fault_status.publish(False)
@@ -71,6 +73,7 @@ class firos:
         self.package_drop_state = False
         self.real_time_fi_flag = False
         self.faul_msg_status_pub.publish(False)
+        self.planning_flag = False
 
 
         #setting up initial values
@@ -124,6 +127,8 @@ class firos:
         #self.publish_time.publish(self.desired_time)
         self.fault_status.publish(True)
 
+    def planning_callback(self,data):
+        self.planning_flag = data.data
 
     def state_callback(self,state):
         self.state = state.data
@@ -144,36 +149,39 @@ class firos:
         if self.desired_fault == 1:
             self.fault_val = np.random.normal(self.desired_mean,self.desired_sd,1)[0]
         if self.desired_fault == 2:
-            self.fault_val_list.append(self.list_joint_data[self.joint]) #to be defined
-        if self.desired_fault == 3:
-            self.fault_val = -self.list_joint_data[self.joint]
-            # !use topic tools to create a package drop
+            self.fault_val_list.append(self.list_joint_data[self.joint])
         if self.desired_fault == 4:
             self.fault_val = self.desired_offset
 
         if self.goal == True:
-            
             if self.state == self.desired_state:
-                #print(self.list_joint_data)
-                self.fault_status.publish(True)
-                self.faul_msg_status_pub.publish(True)
-                if self.desired_fault == 2:
-                    self.list_joint_data[self.joint] = self.fault_val_list[0]
-                elif self.desired_fault == 3:
-                    if self.package_drop_state == False:
-                        self.package_drop_flag = True
-                else:
-                    self.list_joint_data[self.joint] = self.list_joint_data[self.joint] + self.fault_val
-                
-                #print(self.list_joint_data[self.joint])
-                
-                #print("noise error injected")
-                self.joint_data.position = tuple(self.list_joint_data)
-                #self.joint_data.position[1] = error_data
-                #self.joint_state_publisher.publish(self.joint_data)
-                #self.joint_state_publisher.publish(data)
+                if self.desired_time_label == 2:
+                    #print(self.list_joint_data)
+                    self.fault_status.publish(True)
+                    self.faul_msg_status_pub.publish(True)
+                    if self.desired_fault == 2:
+                        self.list_joint_data[self.joint] = self.fault_val_list[0]
+                    elif self.desired_fault == 3:
+                        #print("working")
+                        if self.package_drop_state == False:
+                            self.package_drop_flag = True
+                    else:
+                        self.list_joint_data[self.joint] = self.list_joint_data[self.joint] + self.fault_val
+                    self.joint_data.position = tuple(self.list_joint_data)
                 #self.goal = False
-        #print(self.joint_data)
+                elif self.desired_time_label == 3 and self.planning_flag == False:
+                        self.fault_status.publish(True)
+                        self.faul_msg_status_pub.publish(True)
+                        if self.desired_fault == 2:
+                            self.list_joint_data[self.joint] = self.fault_val_list[0]
+                        elif self.desired_fault == 3:
+                            #print("working")
+                            if self.package_drop_state == False:
+                                self.package_drop_flag = True
+                        else:
+                            self.list_joint_data[self.joint] = self.list_joint_data[self.joint] + self.fault_val
+                        self.joint_data.position = tuple(self.list_joint_data)
+                    
 
         if self.real_time_fi_flag == True:
             if self.desired_fault == 3:
@@ -198,7 +206,7 @@ class firos:
                 #self.joint_data.position[1] = error_data
                 #self.joint_state_publisher.publish(self.joint_data)
                 #self.joint_state_publisher.publish(data)
-                self.real_time_fi = False
+                #self.real_time_fi = False
 
         if self.package_drop_flag == True:
             pass
@@ -222,12 +230,11 @@ class firos:
         self.goal_state = goal_state.data
         #print(self.goal_state)
         if self.goal_state == True:
-            if self.state == self.desired_state:
-                if self.desired_fault == 3:
-                    self.fault_status.publish(True)
-                    #print("works")
-                    cmd = ["rosrun", "topic_tools", "drop" ,"joint_states_fake", "1", str(self.desired_drop_rate), "joint_states"]
-                    self.proc = subprocess.Popen(cmd)
+            if self.desired_fault == 3:
+                self.fault_status.publish(True)
+                print("works")
+                cmd = ["rosrun", "topic_tools", "drop" ,"joint_states_fake", "1", str(self.desired_drop_rate), "joint_states"]
+                self.proc = subprocess.Popen(cmd)
         else:
             self.fault_status.publish(False)
             if self.proc:

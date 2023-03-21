@@ -255,8 +255,8 @@ void closedGripper(trajectory_msgs::JointTrajectory& posture, float y)
   {
     float f1 = 0.001;
     float f2 = 0.001;
-    float e1 = 200;
-    float e2 = 200;
+    float e1 = 280;
+    float e2 = 280;
   }
   posture.points[0].positions[0] = f1;
   posture.points[0].positions[1] = f2;

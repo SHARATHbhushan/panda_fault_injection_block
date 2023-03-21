@@ -4,12 +4,14 @@ import plotly.graph_objs as go
 import plotly.express as px
 
 #Read cars data from csv
-data = pd.read_csv("/home/acefly/robot_fib/data_v2/fault_effect/fault_effect_no_repetation.csv")
+data = pd.read_csv("/home/acefly/robot_fib/data_v3/fault_effect/fault_effect.csv")
 
-df = px.data.iris()
-fig = px.scatter_3d(data, x='joint', y='pose', z='fault',
-              color='fault_effect',opacity=0.8)
-fig.show()
+
+fig = px.scatter_3d(data, x='joint', y='pose', z='fault_effect',
+              color='fault',opacity=0.8)
+
+plotly.offline.plot(fig, filename='Scatter3d.html')
+
 '''
 #Set marker properties
 markercolor = data['fault_effect']
