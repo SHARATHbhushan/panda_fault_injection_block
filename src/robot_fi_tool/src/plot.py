@@ -10,7 +10,7 @@ data = pd.read_csv("/home/acefly/robot_fib/data_v3/fault_effect/fault_effect.csv
 fig = px.scatter_3d(data, x='joint', y='pose', z='fault_effect',
               color='fault',opacity=0.8)
 
-plotly.offline.plot(fig, filename='Scatter3d.html')
+plotly.offline.plot(fig, filename='/home/acefly/robot_fib/plots/Scatter3d.html')
 
 '''
 #Set marker properties

@@ -1,0 +1,14 @@
+fault,fault_effect,Counts
+Noise,Tool_thrown,17
+Stuck_at,Tool_thrown,11
+package_drop,Tool_thrown,10
+offset,Tool_thrown,9
+offset,Human_collision,3
+Noise,Human_collision,2
+Noise,right_support_collision,3
+offset,right_support_collision,3
+offset,front_support_collision,3
+Noise,front_support_collision,1
+offset,Controller_failure,5
+Noise,Controller_failure,4
+Stuck_at,Controller_failure,1

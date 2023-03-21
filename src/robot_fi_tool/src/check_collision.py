@@ -334,7 +334,7 @@ class firos:
                 fault_msg.mean = self.mean
                 fault_msg.sd = self.sd
                 fault_msg.pose = self.fault_state
-                fault_msg.fault_effect = 3
+                #fault_msg.fault_effect = 3
                 self.fault_pub.publish(fault_msg)
                 self.platform_state = True
 
@@ -355,7 +355,7 @@ class firos:
                 fault_msg.mean = self.mean
                 fault_msg.sd = self.sd
                 fault_msg.pose = self.fault_state
-                fault_msg.fault_effect = 4
+                fault_msg.fault_effect = 3
                 self.fault_pub.publish(fault_msg)
                 self.flat_back_state = True
 
@@ -375,7 +375,7 @@ class firos:
                 fault_msg.mean = self.mean
                 fault_msg.sd = self.sd
                 fault_msg.pose = self.fault_state
-                fault_msg.fault_effect = 5
+                fault_msg.fault_effect = 4
                 self.fault_pub.publish(fault_msg)
                 self.flat_right_state = True
 
@@ -395,7 +395,7 @@ class firos:
                 fault_msg.mean = self.mean
                 fault_msg.sd = self.sd
                 fault_msg.pose = self.fault_state
-                fault_msg.fault_effect = 6
+                fault_msg.fault_effect = 5
                 self.fault_pub.publish(fault_msg)
                 self.flat_front_state = True
 
