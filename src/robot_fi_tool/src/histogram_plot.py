@@ -22,8 +22,7 @@ plotly.offline.plot(fig2, filename='/home/acefly/robot_fib/plots/fault_effect_an
 fig3 = px.density_heatmap(df, x="fault", y="fault_effect",
                          title="Density Map of fault and fault_efffect",
                          marginal_x="histogram",
-                         marginal_y="histogram",
-                         width=800, height=500)
+                         marginal_y="histogram")
 plotly.offline.plot(fig3, filename='/home/acefly/robot_fib/plots/fault_and_fault_effect.html')
 
 fig4 = px.density_heatmap(df, x="fault", y="fault_effect",

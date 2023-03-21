@@ -4,7 +4,7 @@ import plotly.graph_objs as go
 import plotly.express as px
 
 #Read cars data from csv
-data = pd.read_csv("/home/acefly/robot_fib/data_v3/fault_effect/fault_effect.csv")
+data = pd.read_csv("/home/acefly/robot_fib/data_v3/fault_effect/fault_effect_no_repetation.csv")
 
 
 fig = px.scatter_3d(data, x='joint', y='pose', z='fault_effect',
