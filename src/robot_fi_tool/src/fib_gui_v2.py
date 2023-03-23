@@ -186,7 +186,7 @@ class Ui_Test_window(object):
 
     def retranslateUi(self, Test_window):
         _translate = QtCore.QCoreApplication.translate
-        Test_window.setWindowTitle(_translate("Test_window", "MainWindow"))
+        Test_window.setWindowTitle(_translate("Test_window", "Robot_Fault_Injection_Module"))
         self.label.setText(_translate("Test_window", "Fault type"))
         self.label_2.setText(_translate("Test_window", "Joint"))
         self.label_3.setText(_translate("Test_window", "Robot State"))
@@ -271,8 +271,8 @@ class Ui_Test_window(object):
         msg.time = int(self.time_val)
         msg.time_label = int(self.time_label_val)
         msg.mean = int(self.mean_val)
-        msg.sd = int(self.sd_val)
-        msg.drop_rate = int(self.drop_rate_val)
+        msg.sd = float(self.sd_val)
+        msg.drop_rate = float(self.drop_rate_val)
         self.fault_publisher.publish(msg)
         
 

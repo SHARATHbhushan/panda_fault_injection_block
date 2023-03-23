@@ -35,6 +35,9 @@ class firos_rand:
         self.max_states = rospy.get_param("/max_states")
         self.max_time_labels = rospy.get_param("/max_time_labels")
         self.max_time = rospy.get_param("/max_time")
+        self.max_time_offset = rospy.get_param("/max_time_offset")
+        self.min_time_offset = rospy.get_param("/min_time_offset")
+        
 
         self.desired_fault = rospy.get_param("/default_fault")
         self.desired_joint = rospy.get_param("/default_joint")
@@ -45,6 +48,7 @@ class firos_rand:
         self.desired_sd = rospy.get_param("/default_sd")
         self.desired_drop_rate = rospy.get_param("/default_drop_rate")
         self.desired_offset = rospy.get_param("/default_offset")
+        self.desired_time_offset = rospy.get_param("/default_time_offset")
 
         self.goal = False
         self.desired_state = 0
@@ -90,15 +94,16 @@ class firos_rand:
             self.desired_state = random.randint(1, self.max_states)
             self.desired_fault = random.randint(1, self.max_faults)
             self.desired_drop_rate = random.randint(self.min_drop_rate,self.max_drop_rate)
-            self.desired_mean = random.randint(self.min_mean,self.max_mean)
-            self.desired_sd = random.randint(self.min_sd,self.max_sd)
+            self.desired_mean = round(random.uniform(self.min_mean,self.max_mean),2)
+            self.desired_sd = round(random.uniform(self.min_sd,self.max_sd),2)
             self.desired_time_label = random.randint(2, self.max_time_labels) #disable for real and execution time fault injection
             #self.desired_time_label = 1
             self.desired_offset = random.randint(self.min_offset,self.max_offset)
             self.desired_time = random.randint(1, self.max_time)
+            self.desired_time_offset = round(random.uniform(self.min_time_offset, self.max_time_offset),2)
 
-            rand_msg.mean = self.desired_mean
-            rand_msg.sd = self.desired_sd
+            rand_msg.mean = round(self.desired_mean,2)
+            rand_msg.sd = round(self.desired_sd,2)
             rand_msg.drop_rate = self.desired_drop_rate
             rand_msg.time = self.desired_time
             rand_msg.time_label = self.desired_time_label
@@ -106,6 +111,7 @@ class firos_rand:
             rand_msg.fault = self.desired_fault
             rand_msg.joint = self.desired_joint
             rand_msg.pose = self.desired_state
+            rand_msg.time_offset = round(self.desired_time_offset,2)
             print(self.fault_list[self.desired_fault] + " Fault is being injected at state " + self.state_list[self.desired_state] + " in joint " + self.joint_list[self.desired_joint])
             print("fault : ", self.desired_fault)
             print("joint : ", self.desired_joint)

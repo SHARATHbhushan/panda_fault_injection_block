@@ -119,8 +119,8 @@ class firos:
         self.desired_time = fault_msg.time
         self.desired_time_label = fault_msg.time_label
         self.desired_offset = fault_msg.offset
-        self.desired_mean = fault_msg.mean
-        self.desired_sd = fault_msg.sd
+        self.desired_mean = round(fault_msg.mean,2)
+        self.desired_sd = round(fault_msg.sd,2)
         self.desired_drop_rate = fault_msg.drop_rate
         self.fault_val_list = []
         self.desired_drop_rate = int(self.desired_drop_rate)

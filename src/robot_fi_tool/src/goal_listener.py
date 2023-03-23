@@ -24,11 +24,14 @@ class goal_listener:
         self.exec_time_exec = 0
         self.exec_time_val = 0
         self.exec_endTime = 0
+        self.desired_time_offset = 0.5
         
 
     def fault_callback(self,data):
         self.desired_time_label = data.time_label
         self.desired_time = data.time
+        self.desired_time_offset = round(data.time_offset,2)
+        print(self.desired_time_offset)
         self.real_time_exec = rospy.Time.now()
         self.real_time_val = rospy.Duration(self.desired_time) 
         self.real_endTime = self.real_time_exec + self.real_time_val
@@ -85,7 +88,7 @@ class goal_listener:
                         self.pub.publish(self.goal_msg)
                         rospy.sleep(0.1)
                     time_offset = rospy.Time.now()
-                    planning_offset = rospy.Duration(0.5)
+                    planning_offset = rospy.Duration(self.desired_time_offset)
                     self.goal_msg_val = True
                     self.pub2.publish(self.goal_msg_val)
                     while rospy.Time.now() < self.real_time_val_s+time_offset+planning_offset:

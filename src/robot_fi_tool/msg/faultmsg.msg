@@ -5,6 +5,7 @@ int32 offset
 int32 time
 int32 time_label
 int32 drop_rate
-int32 mean
-int32 sd
+float32 mean
+float32 sd
 int32 fault_effect
+float32 time_offset
