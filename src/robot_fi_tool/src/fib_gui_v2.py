@@ -272,7 +272,7 @@ class Ui_Test_window(object):
         msg.time_label = int(self.time_label_val)
         msg.mean = int(self.mean_val)
         msg.sd = float(self.sd_val)
-        msg.drop_rate = float(self.drop_rate_val)
+        msg.drop_rate = int(self.drop_rate_val)
         self.fault_publisher.publish(msg)
         
 
