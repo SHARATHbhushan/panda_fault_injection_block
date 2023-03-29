@@ -66,6 +66,8 @@ class firos:
         self.faul_msg_status_pub = rospy.Publisher("fault_flag", Bool,  queue_size=10)
         self.fault_flag_pub = rospy.Publisher("goal_flag", Bool, queue_size=10)
         self.planning_subscription = rospy.Subscriber("planning", Bool, self.planning_callback)
+        self.fault_msg_publisher = rospy.Publisher("fault_msg", faultmsg, queue_size=10)
+
         #setting up initial falgs
         self.goal = False
         self.fault_status.publish(False)
@@ -245,6 +247,10 @@ class firos:
                     self.proc = None
         self.package_drop_state = False
         self.fault_status.publish(False)
+
+    def publish_fault_msg(self,fault_msg):
+        self.fault_msg = fault_msg
+        self.fault_msg_publisher.publish(self.fault_msg)
 
 
 if __name__ == '__main__':
