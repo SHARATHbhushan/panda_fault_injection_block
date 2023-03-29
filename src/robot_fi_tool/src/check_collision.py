@@ -154,7 +154,7 @@ class firos:
         """
         self.exponent = 1000
         #print(float(self.tangram_1_y[self.i])*self.exponent)
-        if abs(float(self.tangram_1_x[self.i])*self.exponent) > 300 or abs(float(self.tangram_1_y[self.i])*self.exponent) > 300 or abs(float(self.tangram_1_z[self.i])*self.exponent) > 300:
+        if abs(float(self.tangram_1_x[self.i])*self.exponent) > 500 or abs(float(self.tangram_1_y[self.i])*self.exponent) > 500 or abs(float(self.tangram_1_z[self.i])*self.exponent) > 5000:
             if self.tangram_1_state == False:
                 print("tangram_1_x fall detected")
                 msg = Int32()
@@ -174,7 +174,7 @@ class firos:
                 self.fault_pub.publish(fault_msg)
                 self.tangram_1_state = True
         
-        if abs(float(self.tangram_2_x[self.i])*self.exponent) > 300 or abs(float(self.tangram_2_y[self.i])*self.exponent) > 300 or abs(float(self.tangram_2_z[self.i])*self.exponent) > 300:
+        if abs(float(self.tangram_2_x[self.i])*self.exponent) > 500 or abs(float(self.tangram_2_y[self.i])*self.exponent) > 500 or abs(float(self.tangram_2_z[self.i])*self.exponent) > 500:
             if self.tangram_2_state == False:
                 print("tangram_2_x fall detected")
                 msg = Int32()
@@ -194,7 +194,7 @@ class firos:
                 self.fault_pub.publish(fault_msg)
                 self.tangram_2_state = True
         
-        if abs(float(self.tangram_3_x[self.i])*self.exponent) > 300 or abs(float(self.tangram_3_y[self.i])*self.exponent) > 300 or abs(float(self.tangram_3_z[self.i])*self.exponent) > 300:
+        if abs(float(self.tangram_3_x[self.i])*self.exponent) > 500 or abs(float(self.tangram_3_y[self.i])*self.exponent) > 500 or abs(float(self.tangram_3_z[self.i])*self.exponent) > 500:
             if self.tangram_3_state == False:
                 print("tangram_3_x fall detected")
                 msg = Int32()
@@ -214,7 +214,7 @@ class firos:
                 self.fault_pub.publish(fault_msg)
                 self.tangram_3_state = True
         
-        if abs(float(self.tangram_4_x[self.i])*self.exponent) > 300 or abs(float(self.tangram_4_y[self.i])*self.exponent) > 300 or abs(float(self.tangram_4_z[self.i])*self.exponent) > 300:
+        if abs(float(self.tangram_4_x[self.i])*self.exponent) > 500 or abs(float(self.tangram_4_y[self.i])*self.exponent) > 500 or abs(float(self.tangram_4_z[self.i])*self.exponent) > 500:
             if self.tangram_4_state == False:
                 print("tangram_4_x fall detected")
                 msg = Int32()
@@ -234,7 +234,7 @@ class firos:
                 self.fault_pub.publish(fault_msg)
                 self.tangram_4_state = True
 
-        if abs(float(self.tangram_5_x[self.i])*self.exponent) > 300 or abs(float(self.tangram_5_y[self.i])*self.exponent) > 300 or abs(float(self.tangram_5_z[self.i])*self.exponent) > 300:
+        if abs(float(self.tangram_5_x[self.i])*self.exponent) > 500 or abs(float(self.tangram_5_y[self.i])*self.exponent) > 500 or abs(float(self.tangram_5_z[self.i])*self.exponent) > 500:
             if self.tangram_5_state == False:
                 print("tangram_5_x fall detected")
                 msg = Int32()
@@ -254,7 +254,7 @@ class firos:
                 self.fault_pub.publish(fault_msg)
                 self.tangram_5_state = True
 
-        if abs(float(self.tangram_6_x[self.i])*self.exponent) > 300 or abs(float(self.tangram_6_y[self.i])*self.exponent) > 300 or abs(float(self.tangram_6_z[self.i])*self.exponent) > 300:
+        if abs(float(self.tangram_6_x[self.i])*self.exponent) > 500 or abs(float(self.tangram_6_y[self.i])*self.exponent) > 500 or abs(float(self.tangram_6_z[self.i])*self.exponent) > 500:
             if self.tangram_6_state == False:
                 print("tangram_6_x fall detected")
                 msg = Int32()
@@ -274,7 +274,7 @@ class firos:
                 self.fault_pub.publish(fault_msg)
                 self.tangram_6_state = True
         
-        if abs(float(self.tangram_7_x[self.i])*self.exponent) > 300 or abs(float(self.tangram_7_y[self.i])*self.exponent) > 300 or abs(float(self.tangram_7_z[self.i])*self.exponent) > 300:
+        if abs(float(self.tangram_7_x[self.i])*self.exponent) > 500 or abs(float(self.tangram_7_y[self.i])*self.exponent) > 500 or abs(float(self.tangram_7_z[self.i])*self.exponent) > 500:
             if self.tangram_7_state == False:
                 print("tangram_7_x fall detected")
                 msg = Int32()
