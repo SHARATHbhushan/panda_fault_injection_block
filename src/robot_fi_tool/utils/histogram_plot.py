@@ -169,14 +169,14 @@ fig6.update_layout(xaxis_tickfont=dict(size=20), yaxis_tickfont=dict(size=20))
 
 
 plotly.offline.plot(fig6, filename='/home/acefly/robot_fib/plot_v2/joint_and _fault_effect.html')
-
+'''
 
 xbins2 = dict(start=-0.5, end=9.5, size=1)
 
 
 fig7 = go.Figure(go.Histogram2d(
-        x=df["joint"],
-        y=df["pose"],
+        x=df["pose"],
+        y=df["fault_effect"],
         xbins=xbins2,
         autobinx=False,
         texttemplate= "%{z}",
@@ -204,7 +204,7 @@ fig7.update_layout(xaxis_tickfont=dict(size=20), yaxis_tickfont=dict(size=20))
 
 
 plotly.offline.plot(fig7, filename='/home/acefly/robot_fib/plot_v2/pose_and _fault_effect.html')
-'''
+
 df_noise = df[df['fault'] == 'Noise']
 
 print(df_noise)
@@ -345,7 +345,7 @@ fig9.update_layout(xaxis_tickfont=dict(size=20), yaxis_tickfont=dict(size=20))
 
 plotly.offline.plot(fig9, filename='/home/acefly/robot_fib/plot_v2/time_label_and_fault_effect.html')
 '''
-
+'''
 df_pd = df[df['fault'] == 'package_drop']
 
 print(df_pd)
@@ -381,4 +381,4 @@ fig9.update_layout(xaxis_tickfont=dict(size=20), yaxis_tickfont=dict(size=20))
 
 
 plotly.offline.plot(fig9, filename='/home/acefly/robot_fib/plot_v2/offset_and_fault_effect.html')
-
+'''
