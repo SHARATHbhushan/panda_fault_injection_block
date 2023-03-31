@@ -30,6 +30,7 @@ class Ui_Test_window(object):
         self.fault_publisher = rospy.Publisher("fault_msg", faultmsg, queue_size=10)
         self.joint_state_fake_subscriber = rospy.Subscriber("joint_states_fake", JointState, self.callback)
         self.joint_state_fake_subscriber = rospy.Subscriber("joint_states", JointState, self.joint_callback)
+        self.pose_callback_s = rospy.Subscriber("pose_state", Bool, self.pose_callback)
         #self.fault_sub = rospy.Subscriber("joint_states", Bool, self.fault_callback)
         self.x = list(range(100))  # 100 time points
         self.y = [randint(0,100) for _ in range(100)]
@@ -44,9 +45,12 @@ class Ui_Test_window(object):
         self.fault_val = 0
         self.mean_val = 0
         self.sd_val = 0
-        self.drop_rate_val = 0    
+        self.drop_rate_val = 0   
+        self.state_val = 0 
         
-
+    def pose_callback(self, msg):
+        self.state_val = msg.data
+        
 
     def setupUi(self, Test_window):
         Test_window.setObjectName("Test_window")
@@ -222,6 +226,7 @@ class Ui_Test_window(object):
                 scene.addItem(item)
                 self.graphicsView.setScene(scene)
 
+    
 
     def valuechange(self):
         self.offset = self.horizontalSlider.value()
@@ -243,6 +248,8 @@ class Ui_Test_window(object):
     def select_time_label(self, time_label_text):
         self.time_label_val = self.time_label_list.index(time_label_text)
         print("time_label: ", self.time_label_val)
+        if self.time_label_val == 1:
+            self.comboBox_3.setCurrentIndex(self.state_val)
 
     def set_time(self):
         self.time_val = self.spinBox.value()

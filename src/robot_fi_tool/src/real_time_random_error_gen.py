@@ -21,7 +21,7 @@ class firos_rand:
 
         self.random_fault_publisher = rospy.Publisher("fault_msg", faultmsg, queue_size=10)
         self.reset_world = rospy.Publisher("reset_world", Bool, queue_size=10)
-
+        self.pose_state = rospy.Subscriber("pose_state", Int32, self.pose_state_callback)
         self.min_mean = rospy.get_param("/min_mean")
         self.max_mean = rospy.get_param("/max_mean")
         self.min_drop_rate = rospy.get_param("/min_drop_rate")
@@ -61,7 +61,11 @@ class firos_rand:
         self.iter_msg = False
         self.rand_time_list = []     
         self.start_timer()
+        self.pose_state = 0
 
+    def pose_state_callback(self, msg):
+        self.pose_state = msg.data
+        
     def start_timer(self):
         rng = np.random.default_rng()
         self.rand_time = rng.choice(range(590), size=7, replace=False)
@@ -117,7 +121,7 @@ class firos_rand:
             rand_msg.offset = self.desired_offset
             rand_msg.fault = self.desired_fault
             rand_msg.joint = self.desired_joint
-            rand_msg.pose = self.desired_state
+            rand_msg.pose = self.pose_state
             print(self.fault_list[self.desired_fault] + " Fault is being injected at state " + self.state_list[self.desired_state] + " in joint " + self.joint_list[self.desired_joint])
             print("fault : ", self.desired_fault)
             print("joint : ", self.desired_joint)
