@@ -6,11 +6,20 @@ import plotly.graph_objs as go
 from matplotlib.cm import ScalarMappable
 import plotly.express as px
 import plotly
+import matplotlib.pyplot as plt
+
+# generate sample data
+import numpy as np
+import pandas as pd
+import seaborn as sns
+
+
 # Load data from DataFrame
 df = pd.read_csv("/home/acefly/robot_fib/data_v4/fault_effect/fault_effect_no_repetation.csv")
 
 
 x_test_size = 35
+
 
 df["fault"] = df["fault"].replace(to_replace=1,value="Noise")
 df["fault"] = df["fault"].replace(to_replace=2,value="Stuck_at")
@@ -20,14 +29,66 @@ df["fault"] = df["fault"].replace(to_replace=4,value="offset")
 
 df["fault_effect"] = df["fault_effect"].replace(to_replace=1,value="Tool Thrown")
 df["fault_effect"] = df["fault_effect"].replace(to_replace=2,value="Human Collision")
-df["fault_effect"] = df["fault_effect"].replace(to_replace=3,value="back cell collision")
-df["fault_effect"] = df["fault_effect"].replace(to_replace=4,value="Right cell collision")
-df["fault_effect"] = df["fault_effect"].replace(to_replace=5,value="Front cell collision")
-df["fault_effect"] = df["fault_effect"].replace(to_replace=6,value="Controller failure")
+df["fault_effect"] = df["fault_effect"].replace(to_replace=3,value="Back Boundary Collision")
+df["fault_effect"] = df["fault_effect"].replace(to_replace=4,value="Side Boundary Collision")
+df["fault_effect"] = df["fault_effect"].replace(to_replace=5,value="Front Boundary Collision")
+df["fault_effect"] = df["fault_effect"].replace(to_replace=6,value="Controller Failure")
 
 
 df["time_label"] = df["time_label"].replace(to_replace=2,value="Planning")
 df["time_label"] = df["time_label"].replace(to_replace=3,value="Execution")
+
+
+
+
+# generate some sample data
+x = np.random.normal(0, 1, 1000)
+y = np.random.normal(0, 1, 1000)
+
+
+unique_val = ['Human Collision', 'Back Boundary Collision', 'Side Boundary Collision','Tool Thrown', 'Controller Failure']
+
+df_sorted = df.set_index('fault_effect').loc[unique_val]
+print(df_sorted)
+
+
+colors = {'Human Collision': 'Reds', 'Back Boundary Collision': 'Blues', 'Side Boundary Collision': 'Greens','Tool Thrown': 'Oranges', 'Controller Failure': 'Purples'}
+
+colors_list = ['Reds', 'Blues', 'Greens','Oranges', 'Purples']
+counts = pd.crosstab(df['fault_effect'], df['fault'])
+# create a heatmap using seaborn
+ct = counts.reindex(unique_val)
+print(ct)
+
+ct_Human = ct.iloc[[0]]
+ct_Back = ct.iloc[[1]]
+ct_Side = ct.iloc[[2]]
+ct_Tool = ct.iloc[[3]]
+ct_Controller = ct.iloc[[4]]
+
+print(ct_Human)
+
+#plt_1 = sns.heatmap(ct_Human, annot=True, cmap='Reds', linewidths=.5, square=True, cbar=False,)
+#plt_2 = sns.heatmap(ct_Back, annot=True, cmap='Blues', linewidths=.5, square=True, cbar=False,)
+#plt_3 = sns.heatmap(ct_Side, annot=True, cmap='Greens', linewidths=.5, square=True, cbar=False,)
+#plt_4 = sns.heatmap(ct_Tool, annot=True, cmap='Greys', linewidths=.5, square=True, cbar=False,)
+plt_5 = sns.heatmap(ct_Controller, annot=True, cmap='Purples', linewidths=.5, square=True, cbar=False,)
+
+
+# set the axis labels
+plt.xlabel("Fault")
+plt.ylabel("Y")
+
+# show the plot
+plt.show()
+
+
+
+
+
+
+
+
 
 '''
 
@@ -170,7 +231,7 @@ fig6.update_layout(xaxis_tickfont=dict(size=20), yaxis_tickfont=dict(size=20))
 
 plotly.offline.plot(fig6, filename='/home/acefly/robot_fib/plot_v2/joint_and _fault_effect.html')
 '''
-
+'''
 xbins2 = dict(start=-0.5, end=9.5, size=1)
 
 
@@ -208,6 +269,7 @@ plotly.offline.plot(fig7, filename='/home/acefly/robot_fib/plot_v2/pose_and _fau
 df_noise = df[df['fault'] == 'Noise']
 
 print(df_noise)
+'''
 '''
 xbins2 = dict(start=-6.5, end=6.5, size=1)
 

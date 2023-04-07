@@ -18,25 +18,19 @@ df = pd.read_csv("/home/acefly/robot_fib/data_v4/fault_effect/fault_effect_no_re
 #              color='fault_effect',opacity=0.8)
 
 #plotly.offline.plot(fig, filename='/home/acefly/robot_fib/plots/Scatter3d_fault_effect_new.html')
-
-
+df['fault_effect'] = df['fault_effect'].replace(6, 5)
+print(df['fault_effect'])
 #df = pd.read_csv('data.csv')
-counts = df['fault_effect'].value_counts()
+counts = df['time_label'].value_counts()
 
 # Create a dictionary to map fault_effect values to marker sizes
 sizes = {}
 for value in counts.index:
     #print(value, counts[value])
-    if value == 1:
+    if value == 2:
         sizes[value] = 100
-    elif value == 2:
-        sizes[value] = 70
     elif value == 3:
-        sizes[value] = 50
-    elif value == 4:
-        sizes[value] = 30
-    else:
-        sizes[value] = 10
+        sizes[value] = 70
 
 
 
@@ -49,7 +43,7 @@ color_dict = dict(zip(unique_vals, colors))
 
 # Create a dictionary to map fault_effect values to marker colors
 
-colors = ['darkblue', 'red', 'green', 'cyan', 'magenta']
+colors = [ 'red', 'green']
 cmap = mcolors.ListedColormap(colors)
 print(cmap)
 
@@ -57,30 +51,34 @@ print(cmap)
 # Create a 3D scatter plot
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
-scatter = ax.scatter(df['joint'], df['pose'], df['time_label'],cmap=cmap, c=df['fault_effect'], marker='o', s=[sizes[val] for val in df['fault_effect']])
+scatter = ax.scatter(df['joint'], df['pose'], df['fault_effect'],cmap=cmap, c=df['time_label'], marker='o', s=[sizes[val] for val in df['time_label']], alpha=0.8)
 
 # Set axis labels
 ax.set_xlabel('Joints')
 ax.set_ylabel('Poses')
-ax.set_zlabel('Time Label')
+#ax.set_zlabel('Fault Effect')
 
-ax.set_zticks([2, 3])
-ax.set_zticklabels(['planning', 'execution'])
+ax.set_zticks([1, 2, 3, 4, 5])
 
-ax.tick_params(axis='z', pad=10) 
 
-mapping = {1: 'Tool Thrown', 2: 'Human Collision', 3: 'Back Boundary Collision', 4: 'Side Boundary Collision', 6: 'Controller Failure'}
+ax.tick_params(axis='z', pad=50) 
 
+mapping = {1: 'Tool Thrown', 2: 'Human Collision', 3: 'Back Boundary Collision', 4: 'Side Boundary Collision', 5: 'Controller Failure'}
 # Replace the values in the 'fault_effect' column using the mapping
-unique_val = df['fault_effect'].replace(mapping).unique()
-
-
+unique_val = ['Tool Thrown', 'Human Collision', 'Back Boundary Collision', 'Side Boundary Collision', 'Controller Failure']
+print(unique_val)
+ax.set_zticklabels(unique_val)
 #print(df['fault_effect'])
 
-unique_values = df['fault_effect'].unique()
+
+mapping2 = {2 : "planning", 3 : "execution"}
+
+df_time_label = df['time_label'].replace(mapping2).unique()
+
+unique_values = df['time_label'].unique()
 print(unique_values)
 legend_markers = [mlines.Line2D([], [], color=scatter.cmap(scatter.norm([val])), marker='o', linestyle='', markersize=10) for val in unique_values]
-ax.legend(legend_markers, unique_val, numpoints=1, loc='upper right', bbox_to_anchor=(1.3, 1))
+ax.legend(legend_markers, df_time_label, numpoints=1, loc='upper right', bbox_to_anchor=(1.3, 1))
 # Show the plot
 plt.show()
 
