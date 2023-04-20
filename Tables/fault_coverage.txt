@@ -1,1 +1,4 @@
 0.22363150867823764
+
+fault_effects_without_repetation = 670
+faults_injected = 2996
