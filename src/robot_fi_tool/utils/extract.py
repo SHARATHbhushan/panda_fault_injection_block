@@ -48,7 +48,7 @@ real_joint_states_list = [x for x in onlyfiles if x.startswith(real_joint_states
 rosout_list = [x for x in onlyfiles if x.startswith(rosout_key)]
 fault_effect_list = [x for x in onlyfiles if x.startswith(fault_effect_key)]
 print(fault_effect_list)
-
+    
 '''
 collision_dataframe = pd.DataFrame()
 
@@ -159,7 +159,7 @@ fault_effect_dataframe.insert( 0, column="time_stamp",value = p)
 
 fault_effect_dataframe = fault_effect_dataframe.reset_index()
 fault_effect_dataframe = fault_effect_dataframe.drop('index', axis=1)
-fault_effect_dataframe.to_csv("/home/acefly/robot_fib/data_v3/fault_effect/fault_effect.csv")
+fault_effect_dataframe.to_csv("/home/acefly/robot_fib/data_v4/fault_effect/fault_effect.csv")
 val = fault_effect_dataframe.columns[[1,2,3,4,5,6,7,8,9,10]]
 print(val)
 fault_effect_dataframe.drop_duplicates(subset=fault_effect_dataframe.columns[[1,2,3,4,5,6,7,8,9,10]], keep=False, inplace=True)

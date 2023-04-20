@@ -143,7 +143,7 @@ print(df_final_exec)
 
 df_final_exec.to_csv("/home/acefly/robot_fib/Tables/fault_effects_during_execution.csv", index=False, header=True)
 
-
+print(fault_coverage)
 
 
 ####

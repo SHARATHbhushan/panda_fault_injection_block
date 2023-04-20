@@ -38,7 +38,19 @@ df["fault_effect"] = df["fault_effect"].replace(to_replace=6,value="Controller F
 df["time_label"] = df["time_label"].replace(to_replace=2,value="Planning")
 df["time_label"] = df["time_label"].replace(to_replace=3,value="Execution")
 
+'''
+arr = df['fault_effect'].to_numpy()
 
+labels, counts = np.unique(arr, return_counts=True)
+plt.bar(labels, counts, align='center')
+plt.gca().set_xticks(labels)
+plt.ylabel('Number of Fault Effects', fontsize=12, labelpad=20)
+plt.xlabel('Fault Effect', fontsize=12, labelpad=20)
+
+plt.show()
+
+'''
+'''
 
 
 # generate some sample data
@@ -68,29 +80,29 @@ ct_Controller = ct.iloc[[4]]
 
 print(ct_Human)
 
-#plt_1 = sns.heatmap(ct_Human, annot=True, cmap='Reds', linewidths=.5, square=True, cbar=False,)
-#plt_2 = sns.heatmap(ct_Back, annot=True, cmap='Blues', linewidths=.5, square=True, cbar=False,)
-#plt_3 = sns.heatmap(ct_Side, annot=True, cmap='Greens', linewidths=.5, square=True, cbar=False,)
-#plt_4 = sns.heatmap(ct_Tool, annot=True, cmap='Greys', linewidths=.5, square=True, cbar=False,)
-plt_5 = sns.heatmap(ct_Controller, annot=True, cmap='Purples', linewidths=.5, square=True, cbar=False,)
+#plt_1 = sns.heatmap(ct_Human, annot=True, cmap='Reds', linewidths=1, square=True, cbar=False, linecolor='black')
+#plt_2 = sns.heatmap(ct_Back, annot=True, cmap='Blues', linewidths=1, square=True, cbar=False, linecolor='black')
+#plt_3 = sns.heatmap(ct_Side, annot=True, cmap='Greens', linewidths=1, square=True, cbar=False, linecolor='black')
+#plt_4 = sns.heatmap(ct_Tool, annot=True, cmap='Greys', linewidths=1, square=True, cbar=False, linecolor='black', fmt='g')
+plt_5 = sns.heatmap(ct_Controller, annot=True, cmap='Purples', linewidths=1, square=True, cbar=False, linecolor='black')
 
 
 # set the axis labels
-plt.xlabel("Fault")
-plt.ylabel("Y")
 
+#plt.xlabel("Fault")
+#plt.ylabel("Fault Effect")
+#plt.yticks(rotation=0)
 # show the plot
 plt.show()
 
-
-
-
-
-
-
-
-
 '''
+
+
+
+
+
+
+
 
 fig = px.histogram(df, x="fault", color = "time_label",opacity=0.7)
 fig.update_xaxes(
@@ -229,7 +241,7 @@ fig6.update_layout(coloraxis = {'colorscale':'Bluered'})
 fig6.update_layout(xaxis_tickfont=dict(size=20), yaxis_tickfont=dict(size=20))
 
 
-plotly.offline.plot(fig6, filename='/home/acefly/robot_fib/plot_v2/joint_and _fault_effect.html')
+plotly.offline.plot(fig6, filename='/home/acefly/robot_fib/plot_v2/joint_and_fault_effect.html')
 '''
 '''
 xbins2 = dict(start=-0.5, end=9.5, size=1)
@@ -301,7 +313,7 @@ fig8.update_layout(coloraxis = {'colorscale':'Bluered'})
 fig8.update_layout(xaxis_tickfont=dict(size=20), yaxis_tickfont=dict(size=20))
 
 
-plotly.offline.plot(fig8, filename='/home/acefly/robot_fib/plot_v2/noise_and _mean.html')
+plotly.offline.plot(fig8, filename='/home/acefly/robot_fib/plot_v2/noise_and_mean.html')
 
 
 
@@ -335,7 +347,7 @@ fig9.update_layout(coloraxis = {'colorscale':'Bluered'})
 fig9.update_layout(xaxis_tickfont=dict(size=20), yaxis_tickfont=dict(size=20))
 
 
-plotly.offline.plot(fig9, filename='/home/acefly/robot_fib/plot_v2/noise_and _sd.html')
+plotly.offline.plot(fig9, filename='/home/acefly/robot_fib/plot_v2/noise_and_sd.html')
 '''
 '''
 df_offset = df[df['fault'] == 'offset']
@@ -443,4 +455,3 @@ fig9.update_layout(xaxis_tickfont=dict(size=20), yaxis_tickfont=dict(size=20))
 
 
 plotly.offline.plot(fig9, filename='/home/acefly/robot_fib/plot_v2/offset_and_fault_effect.html')
-'''

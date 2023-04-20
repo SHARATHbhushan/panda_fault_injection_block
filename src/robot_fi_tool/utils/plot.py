@@ -30,13 +30,13 @@ for value in counts.index:
     if value == 1:
         sizes[value] = 100
     elif value == 2:
-        sizes[value] = 70
+        sizes[value] = 100
     elif value == 3:
-        sizes[value] = 50
+        sizes[value] = 100
     elif value == 4:
-        sizes[value] = 30
+        sizes[value] = 100
     else:
-        sizes[value] = 10
+        sizes[value] = 100
 
 
 
@@ -53,21 +53,28 @@ colors = ['darkblue', 'red', 'green', 'cyan', 'magenta']
 cmap = mcolors.ListedColormap(colors)
 print(cmap)
 
+# planning = 2
+df.drop(df[df['time_label'] == 3].index, inplace = True)
+
+print(df['time_label'])
+
 
 # Create a 3D scatter plot
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
-scatter = ax.scatter(df['joint'], df['pose'], df['time_label'],cmap=cmap, c=df['fault_effect'], marker='o', s=[sizes[val] for val in df['fault_effect']])
+scatter = ax.scatter(df['joint'], df['pose'], df['fault'],cmap=cmap, c=df['fault_effect'], marker='o', s=[sizes[val] for val in df['fault_effect']])
 
 # Set axis labels
-ax.set_xlabel('Joints')
-ax.set_ylabel('Poses')
-ax.set_zlabel('Time Label')
+ax.set_xlabel('Joints',labelpad=10, size=18)
 
-ax.set_zticks([2, 3])
-ax.set_zticklabels(['planning', 'execution'])
+ax.set_ylabel('Poses', labelpad=10, size=18)
+ax.set_zlabel('Faults',labelpad=65, size=18)
+plt.xticks(fontsize=14)
+plt.yticks(fontsize=14)
+ax.set_zticks([1, 2,3,4])
+ax.set_zticklabels(['noise', 'stuck at', 'package_drop', 'offset'], size=14)
 
-ax.tick_params(axis='z', pad=10) 
+ax.tick_params(axis='z', pad=30) 
 
 mapping = {1: 'Tool Thrown', 2: 'Human Collision', 3: 'Back Boundary Collision', 4: 'Side Boundary Collision', 6: 'Controller Failure'}
 

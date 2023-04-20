@@ -23,6 +23,23 @@ print(df['fault_effect'])
 #df = pd.read_csv('data.csv')
 counts = df['time_label'].value_counts()
 
+print(df)
+
+
+
+#plt.hist(df['fault_effect'], bins=5)
+#plt.show() 
+
+
+
+
+
+
+
+
+
+
+
 # Create a dictionary to map fault_effect values to marker sizes
 sizes = {}
 for value in counts.index:
@@ -67,6 +84,16 @@ mapping = {1: 'Tool Thrown', 2: 'Human Collision', 3: 'Back Boundary Collision',
 # Replace the values in the 'fault_effect' column using the mapping
 unique_val = ['Tool Thrown', 'Human Collision', 'Back Boundary Collision', 'Side Boundary Collision', 'Controller Failure']
 print(unique_val)
+
+
+
+
+
+
+
+
+
+
 ax.set_zticklabels(unique_val)
 #print(df['fault_effect'])
 
@@ -77,6 +104,12 @@ df_time_label = df['time_label'].replace(mapping2).unique()
 
 unique_values = df['time_label'].unique()
 print(unique_values)
+
+
+
+
+
+
 legend_markers = [mlines.Line2D([], [], color=scatter.cmap(scatter.norm([val])), marker='o', linestyle='', markersize=10) for val in unique_values]
 ax.legend(legend_markers, df_time_label, numpoints=1, loc='upper right', bbox_to_anchor=(1.3, 1))
 # Show the plot
