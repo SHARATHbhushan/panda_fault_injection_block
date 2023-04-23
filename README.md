@@ -77,3 +77,36 @@ or
 
 - `bash pipiline.sh`
 
+this starts random fault injection experiment and saves the bag files into data_v4
+
+
+
+
+
+# Docker setup
+
+The package is also supported with docker, we provide a docker image [here](https://hub.docker.com/r/sharathnataraj1304/panda_robot_fault_injection_framework), it is built with noetic ros docker image and this section shows how to setup the image and start the container, and run the graphics to support gazebo and rviz
+
+- `docker pull sharathnataraj1304/panda_robot_fault_injection_framework:latest`
+
+- `sudo xhost +si:localuser:root`
+
+- `docker run --gpus all -e DISPLAY=$DISPLAY --env NVIDIA_VISIBLE_DEVICES=all --env NVIDIA_DRIVER_CAPABILITIES=all --env DISPLAY --env QT_X11_NO_MITSHM=1 -v /tmp/.X11-unix:/tmp/.X11-unix -v /dev:/dev --net=host --privileged -it sharathnataraj1304/panda_robot_fault_injection_framework:latest /bin/bash`
+
+- `source /opt/ros/noetic/setup.bash`
+
+- in the other terminal start roscore locally `source /opt/ros/noetic/setup.bash` and `roscore`
+
+- test the topics within the docker - `rostopic list`
+
+- `cd panda_fault_injection_block`
+
+- `rm -r build/` and `rm -r devel/`
+
+- `catkin build -j4 -DCMAKE_BUILD_TYPE=Release -DFranka_DIR:PATH=~/libfranka/build`
+
+- `source devel/setup.bash`
+
+- `bash docker_exec.sh`
+
+
