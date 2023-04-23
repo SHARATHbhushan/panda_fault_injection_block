@@ -209,6 +209,11 @@ plotly.offline.plot(fig5, filename='/home/acefly/robot_fib/plot_v2/fault_and_fau
 
 
 
+
+
+
+# use offset group to have 2d histogram on the same figure
+
 xbins = dict(start=-0.5, end=9.5, size=1)
 
 
@@ -393,7 +398,7 @@ plotly.offline.plot(fig9, filename='/home/acefly/robot_fib/plot_v2/offset_and_fa
 xbins2 = dict(start=0.5, end=3.5, size=1)
 
 fig9 = go.Figure(go.Histogram2d(
-        x=df["time_label"],
+        x=df["time"],
         y=df["fault_effect"],
         texttemplate= "%{z}",
         textfont=dict(size=30),
@@ -404,7 +409,7 @@ fig9 = go.Figure(go.Histogram2d(
 fig9.update_xaxes(
         tickangle = 0,
 
-        title_text = "Time_label",
+        title_text = "Time",
         title_font = {"size": 35},
         title_standoff = 25)
 
@@ -417,7 +422,7 @@ fig9.update_layout(coloraxis = {'colorscale':'Bluered'})
 fig9.update_layout(xaxis_tickfont=dict(size=20), yaxis_tickfont=dict(size=20))
 
 
-plotly.offline.plot(fig9, filename='/home/acefly/robot_fib/plot_v2/time_label_and_fault_effect.html')
+plotly.offline.plot(fig9, filename='/home/acefly/robot_fib/plot_v2/time_and_fault_effect.html')
 '''
 '''
 df_pd = df[df['fault'] == 'package_drop']
